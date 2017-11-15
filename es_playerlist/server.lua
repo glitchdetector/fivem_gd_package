@@ -18,7 +18,9 @@ local rank_special = {
     ["conductor"] =         {suffix = {x=36,y=11}, color = "chocolate", title = "Train Conductor",
         levelnames = {"train", "train"},
         levels = {
+            [3] = {title = "Good Train Conductor"},
             [5] = {title = "Skilled Train Conductor"},
+            [8] = {title = "Specialized Train Conductor"},
             [10] = {title = "Professional Train Conductor", namecolor = "chocolate"},
         }},
     ["emergency"] =         {suffix = {x=36,y=22}, color = "tomato", title = "EMS",
