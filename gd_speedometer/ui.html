@@ -1,0 +1,146 @@
+<head>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:light,regular,medium,thin,italic,mediumitalic,bold" title="roboto">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!--<script src="nui://game/ui/jquery.js" type="text/javascript"></script>-->
+	<script>
+		
+		var USE_75_PERCENT_FUEL_METER_LIMIT = true; // CHANGE TO FALSE TO SHOW ALL DAMAGE ON FUEL GAUGUE INSTEAD OF 75-100%;
+		
+		// The infamous lengthdir functions from GameMaker, now in JavaScript form!
+		Lengthdir = {};
+		Lengthdir.x = function(len, dir) {
+			return Math.cos(dir * (Math.PI / 180)) * len;
+		}
+		Lengthdir.y = function(len, dir) {
+			return Math.sin(dir * (Math.PI / 180)) * len;
+		}
+
+		var previousSpeed = 0;
+		var previousFuel = 75;
+		var speedometerSize = 240;
+		
+		// Speedometer
+		function setSpeed(speed) {
+			var ctx = document.getElementById("needle").getContext("2d");
+			
+			var ang = (90 / 200) * Math.min(Math.max(0,speed),200);
+			//ang = Math.min(Math.max(ang,0),90);
+			ctx.beginPath();
+			ctx.moveTo(speedometerSize - Lengthdir.x(120,ang), speedometerSize - Lengthdir.y(120,ang));
+			ctx.lineTo(speedometerSize - Lengthdir.x(180,ang), speedometerSize - Lengthdir.y(180,ang));
+			ctx.lineWidth = 4;
+			ctx.strokeStyle = "#CC0000";
+			ctx.stroke();
+			previousSpeed = speed;
+			document.getElementById("speedtext").innerHTML = "" + Math.floor(speed) + " MPH";
+		}
+		
+		// Fuel meter (75-100) (Made for server with 85% vehicle health breakdown)
+		function setFuel(fuel) {
+			var ctx = document.getElementById("needle").getContext("2d");
+			
+			var ang = (90 / 100) * Math.min(Math.max(0,fuel),100);
+			if (USE_75_PERCENT_FUEL_METER_LIMIT) {
+				ang = (90 / 25) * Math.min(Math.max(0,fuel-75),25);
+			}
+			//ang = Math.min(Math.max(ang,0),90);
+			ctx.beginPath();
+			ctx.moveTo(speedometerSize - Lengthdir.x(25,ang), speedometerSize - Lengthdir.y(25,ang));
+			ctx.lineTo(speedometerSize - Lengthdir.x(85,ang), speedometerSize - Lengthdir.y(85,ang));
+			ctx.lineWidth = 4;
+			ctx.strokeStyle = "#CC0000";
+			ctx.stroke();
+			previousFuel = fuel;
+		}
+		
+		function clearNeedle() {
+			var ctx = document.getElementById("needle").getContext("2d");
+			ctx.clearRect(0,0,speedometerSize,speedometerSize);
+		}
+		
+		function showSpeed() {
+			$("#speedometer").css('opacity', 1);
+		}
+		function hideSpeed() {
+			$("#speedometer").css('opacity', 0);
+		}
+
+		window.onload = function(e){
+		
+			// For people with triple or more 1080p monitors, move the speedometer to the middle screen with the same offset as a single 1080p monitor -- Thanks Ronjoe for suggesting!
+			var clientWidth = document.body.clientWidth;
+			if (clientWidth > 2048*2) {
+				var placement = ((clientWidth) / 2) - ((1920/2) - 20);
+				$('#speedometer').css('right',placement);
+				$('#meter').css('right',placement);
+				$('#needle').css('right',placement);
+				$('#fuel').css('right',placement);
+				$('#speedtext').css('right',placement);
+			} else {
+				$('#speedometer').css('right',240);
+				$('#meter').css('right',240);
+				$('#needle').css('right',240);
+				$('#fuel').css('right',240);
+				$('#speedtext').css('right',240);
+			}
+			
+			// NUI Callback
+			window.addEventListener('message', function(event){
+				var item = event.data;
+				console.log(item);
+
+				if(item.showSpeed == true)
+					showSpeed();
+				if(item.hideSpeed == true)
+					hideSpeed();
+				if(item.setSpeed == true) {
+					clearNeedle();
+					setSpeed(item.speed);
+					setFuel(previousFuel);
+				}
+				if(item.setFuel == true) {
+					clearNeedle();
+					setFuel(item.fuel);
+					setSpeed(previousSpeed);
+				}
+			})
+		}
+	</script>
+
+	<style>
+		@font-face {
+			font-family: pcdown;
+			src: url(pdown.ttf);
+		}
+		
+		#speedometer, #meter, #needle, #fuel {
+			position: fixed;
+			bottom: 200;
+		}
+		#speedtext {
+			font-family: pcdown;
+			position: fixed;
+			bottom: 140;
+			text-align: center;
+			width: 240px;
+			font-size: 48px;
+			color: white;
+			text-shadow:
+			-1px -1px 0 #000,
+			1px -1px 0 #000,
+			-1px 1px 0 #000,
+			1px 1px 0 #000;  
+		}
+		
+	</style>
+</head>
+
+<body>
+	<div id="speedometer">
+		<div id="speedtext">Ree</div>
+		<img id="meter" src="meter.png" width="240" height="240">
+		<canvas id="needle" width="240" height="240">
+		<canvas id="fuel" width="240" height="240">
+		<div id="speed" />
+	</div>
+</body>
