@@ -1,0 +1,140 @@
+<CVehicleModelInfoVariation>
+  <variationData>
+    <Item>
+      <modelName>collinsco_tanker</modelName>
+      <colors>
+        <Item>
+          <indices content="char_array">
+            131  
+            131 
+            111 
+            6 
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+		<Item>
+          <indices content="char_array">
+            131  
+            131 
+            111 
+            6  
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="95" />
+          </Item>
+          <Item>
+            <Name>White Plate 2</Name>
+            <Value value="50" />
+          </Item>
+          <Item>
+            <Name>Blue Plate</Name>
+            <Value value="10" />
+          </Item>
+          <Item>
+            <Name>Yellow Plate</Name>
+            <Value value="15" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="18" />
+      <sirenSettings value="0" />
+    </Item>
+    <Item>
+      <modelName>collinsco_phantom3</modelName>
+      <colors>
+        <Item>
+          <indices content="char_array">
+            14 
+            14
+            0 
+            156 
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="100" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1" />
+      <sirenSettings value="0" />
+    </Item>
+	<Item> 
+	  <modelName>frllc_firesuv</modelName>
+	  <colors>
+		<Item>
+		  <indices content="char_array">
+			134
+			134
+			156
+			156
+		  </indices>
+		  <liveries>
+			<Item value="true" />
+			<Item value="false" />
+			<Item value="false" />
+			<Item value="false" />
+			<Item value="false" />
+			<Item value="false" />
+			<Item value="false" />
+			<Item value="false" />
+		  </liveries>
+		</Item>
+	  </colors>
+	  <kits>
+		<Item>157_massacaro2_modkit</Item>
+	  </kits>
+	  <windowsWithExposedEdges />
+	  <plateProbabilities>
+		<Probabilities />
+	  </plateProbabilities>
+	  <lightSettings value="1" />
+	  <sirenSettings value="1" />
+	</Item>
+  </variationData>
+</CVehicleModelInfoVariation>

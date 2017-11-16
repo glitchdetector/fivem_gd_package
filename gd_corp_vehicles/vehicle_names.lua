@@ -1,0 +1,7 @@
+Citizen.CreateThread(function()
+	AddTextEntry("0x9E5121DF", "Petrochem Tanker")
+	AddTextEntry("0x7D4FBA2F", "Collins' Petrochem Corp.")
+	AddTextEntry("0x317707AF", "First Response LLC Tahoe")
+	AddTextEntry("0x0C195459", "EMS Unit")
+	AddTextEntry("0xA06D2F5A", "First Response LLC")
+end)
