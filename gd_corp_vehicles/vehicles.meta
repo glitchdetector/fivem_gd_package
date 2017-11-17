@@ -422,7 +422,7 @@
       <txdName>frllc_firesuv</txdName>
       <handlingId>FBI2</handlingId>
       <gameName>GRANGER</gameName>
-      <vehicleMakeName>FRLLC</vehicleMakeName>
+      <vehicleMakeName>COBRACO</vehicleMakeName>
       <expressionDictName>null</expressionDictName>
       <expressionName>null</expressionName>
       <animConvRoofDictName>null</animConvRoofDictName>
@@ -541,11 +541,7 @@
   <txdRelationships>
     <Item>
       <parent>vehshare_worn</parent>
-      <child>phantom3</child>
-    </Item>
-    <Item>
-      <parent>vehicles_dom_interior</parent>
-      <child>phantom3</child>
+      <child>collinsco_phantom3</child>
     </Item>
   </txdRelationships>
 </CVehicleModelInfo__InitDataList>
