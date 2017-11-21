@@ -11,6 +11,7 @@ function ShowPlayerList(playerList)
     local connections = playerList.connections
     local max_players = 32
     local total_levels = 0
+	print("Playerlist Stats: " .. playerList.gen.time .. " seconds and " .. playerList.gen.cycles .. " cycles")
     listHTML = listHTML .. header
     for k,v in next, playerList.data do
         if v ~= nil then
@@ -40,8 +41,9 @@ end
 RegisterNetEvent("gd_playerlist:open")
 AddEventHandler("gd_playerlist:open",
     function(players)
---        print("received open call")
-        ShowPlayerList(players)
+		if plist == true then
+        	ShowPlayerList(players)
+		end
     end
 )
 

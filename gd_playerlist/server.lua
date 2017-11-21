@@ -91,14 +91,6 @@ local rank_special = {
             [27] = {title = "Professional Trucker", namecolor = "darkgreen"},
         }},
     
-    ["user"] =              {},
-    ["staff"] =             {},
-    ["support"] =           {},
-    ["mod"] =               {},
-    ["admin"] =             {},
-    ["headadmin"] =         {},
-    ["superadmin"] =        {},
-    
     ["hidden"] =            {hidden = true}, 
     ["kicked"] =            {prefix = {x=40,y=2}}, 
     ["muted"] =             {prefix = {x=32,y=11}, title = "Muted", color = "darkgray", namecolor = "darkgray"}, 
@@ -153,7 +145,7 @@ AddEventHandler("vRP:playerJoin", function(user_id, user, name, last_login)
 end)
 
 AddEventHandler("vRP:playerLeave", function(user_id, user)
-    local totaltime = (os.clock() - login_time[user_id]) + total_time[user_id]
+    local totaltime = (os.clock() - (login_time[user_id] or 0)) + (total_time[user_id] or 0)
     if totaltime > 0 then 
         vRP.setUData({user_id, "playtime", totaltime})
     end
@@ -208,153 +200,179 @@ function updateData(old_data, new_data)
     return r
 end
 
-RegisterServerEvent("gd_playerlist:askOpen")
-AddEventHandler("gd_playerlist:askOpen", function()
-    local source = source
-    local playerList = {}
-    if (os.clock() - cache.time > 5) then -- 5 second cache to reduce load time
-        -- Need new cache
-        local users = vRP.getUsers()
-        for user_id, user in next, users do
-            if tostring(GetPlayerName(user)) ~= 'nil' then
-                if not login_time[user_id] then login_time[user_id] = os.clock() end -- set their fucking time if it isnt set
-                local logintime = os.clock() - (login_time[user_id] or 0)
-                local totaltime = (logintime or 0) + (total_time[user_id] or 0)
-                local color = "white"
-                local namecolor = "white"
-                local rank_color = "white"
-                local title = ""
-                local prefix = {x=40,y=39}
-                local suffix = {x=40,y=39}
-                local timer = ""
-                local totaltimer = ""
-                local id = user_id
-                local hidden = false
-                local hiddentotal = false
-                local name = GetPlayerName(user)
-                local sort = logintime
-                local data = {}
-                for group, group_data in next, rank_special do
-                    if vRP.hasGroup({user_id, group}) then
-                        -- Assign data from group (job, rank etc)
-                        data = updateData(data, group_data)
-                            
-                        -- Assign extra data from group based on levels
-                        if group_data.levelnames then
-                            local category = group_data.levelnames[1]
-                            local skillname = group_data.levelnames[2]
-                            local skill = category .. "." .. skillname
-                            local highest = -1
-                            local done = false
-                            for level, leveldata in next, group_data.levels do
-                                if (vRP.hasPermission({user_id, "@" .. skill .. ".>" .. (level - 1)}) or
-                                    vRP.hasPermission({user_id, "@" .. skill .. "." .. level})) and 
-                                    (level >= highest or not done) then
-                                    done = true
-                                    highest = level
-                                    data = updateData(data, leveldata)
-                                end
-                            end
-                        end
-                    end
-                end
-                for key, titles_data in next, user_titles do
-                    if user_id == key then
-                        data = updateData(data, titles_data)
-                    end
-                end
-                for key, override_data in next, overrides do
-                    if user_id == key then
-                        data = updateData(data, override_data)
-                    end
-                end
-                    
-                if data.id then
-                    id = data.id
-                end
-                if data.name then
-                    name = data.name
-                end
-                if data.title then
-                    title = data.title
-                end
-                if data.color then
-                    color = data.color
-                end
-                if data.namecolor then
-                    namecolor = data.namecolor
-                end
-                if data.fullcolor then
-                    namecolor = data.fullcolor
-                    color = data.fullcolor
-                end
-                if data.prefix then
-                    prefix = data.prefix
-                end
-                if data.usericon then
-                    usericon = data.usericon
-                end
-                if data.suffix then
-                    suffix = data.suffix
-                end
-                if data.timer then
-                    timer = data.timer
-                end
-                if data.totaltimer then
-                    totaltimer = data.totaltimer
-                end
-                if data.hidden then
-                    hidden = tonumber(data.hidden)
-                end
-                if data.hiddentotal then
-                    hiddentotal = tonumber(data.hiddentotal)
-                end
-                if data.sort then
-                    sort = tonumber(data.sort)
-                end
-                    
-                local icon = GenerateCSSPosition(prefix)
-                local jobicon = GenerateCSSPosition(suffix)
+local function log(text)
+	print("[gd_playerlist] " .. text)
+end
 
-                local time = GetSexyTime(logintime)
-                local timetotal = GetSexyTime(totaltime)
-                if timer ~= "" then
-                    time = timer
-                end
-                if totaltimer ~= "" then
-                    timetotal = totaltimer
-                end
-                if hiddentotal then
-                    timetotal = "N/A"
-                end
-                    
-                local uaptitudes = vRP.getUserAptitudes({user_id})
-                local total_xp = 0
-                for k,v in pairs(uaptitudes) do
-                    -- display group
-                    for l,w in pairs(v) do
-                        local exp = uaptitudes[k][l]
-                        total_xp = total_xp + exp
-                    end
-                end
-                local player_level = math.floor(vRP.expToLevel({total_xp}))
-                    
-                if (not hidden) then 
-                    table.insert(playerList, {prefix = "", name = name, id = id, player = user, title = title, color = color, namecolor = namecolor, time = time, sort = sort, icon = icon, jobicon = jobicon, totaltime = timetotal, level = player_level})
-                end
-            end
-        end
-        table.sort(playerList, function(a,b)
-            return (a.sort or 0) < (b.sort or 0)
-        end)
-        local uptime = GetSexyTime(os.clock())
-            
-        -- Update Cache
-        cache = {time = os.clock(), id = source, uptime = uptime, connections = connections, data = playerList}
-    else
-        -- Use cache instead
-    end
-    TriggerClientEvent("gd_playerlist:open", source, cache)
+function GenerateCache()
+	local playerList = {}
+	-- Need new cache
+	log("Generating new playerlist cache")
+	local gen_start = os.clock()
+	local gen_cycles = 0
+	local users = vRP.getUsers()
+	local no_users = #users
+	for user_id, user in next, users do
+		if tostring(GetPlayerName(user)) ~= 'nil' then
+			local gen_player_time = os.clock()
+			local gen_player_cycles = gen_cycles
+
+			if not login_time[user_id] then login_time[user_id] = os.clock() end -- set their fucking time if it isnt set
+			local logintime = os.clock() - (login_time[user_id] or 0)
+			local totaltime = (logintime or 0) + (total_time[user_id] or 0)
+			local color = "white"
+			local namecolor = "white"
+			local rank_color = "white"
+			local title = ""
+			local prefix = {x=40,y=39}
+			local suffix = {x=40,y=39}
+			local timer = ""
+			local totaltimer = ""
+			local id = user_id
+			local hidden = false
+			local hiddentotal = false
+			local name = GetPlayerName(user)
+			local sort = logintime
+			local data = {}
+			for group, group_data in next, rank_special do
+				gen_cycles = gen_cycles + 1
+				if vRP.hasGroup({user_id, group}) then
+					-- Assign data from group (job, rank etc)
+					data = updateData(data, group_data)
+
+					-- Assign extra data from group based on levels
+					if group_data.levelnames then
+						local category = group_data.levelnames[1]
+						local skillname = group_data.levelnames[2]
+						local skill = category .. "." .. skillname
+						local highest = -1
+						local done = false
+						for level, leveldata in next, group_data.levels do
+							gen_cycles = gen_cycles + 1
+							if (vRP.hasPermission({user_id, "@" .. skill .. ".>" .. (level - 1)}) or
+								vRP.hasPermission({user_id, "@" .. skill .. "." .. level})) and 
+								(level >= highest or not done) then
+								done = true
+								highest = level
+								data = updateData(data, leveldata)
+							end
+						end
+					end
+break -- TEMP FIX
+				end
+			end
+			for key, titles_data in next, user_titles do
+				if user_id == key then
+					data = updateData(data, titles_data)
+					gen_cycles = gen_cycles + 1
+				end
+			end
+			for key, override_data in next, overrides do
+				if user_id == key then
+					data = updateData(data, override_data)
+					gen_cycles = gen_cycles + 1
+				end
+			end
+
+			if data.id then
+				id = data.id
+			end
+			if data.name then
+				name = data.name
+			end
+			if data.title then
+				title = data.title
+			end
+			if data.color then
+				color = data.color
+			end
+			if data.namecolor then
+				namecolor = data.namecolor
+			end
+			if data.fullcolor then
+				namecolor = data.fullcolor
+				color = data.fullcolor
+			end
+			if data.prefix then
+				prefix = data.prefix
+			end
+			if data.usericon then
+				usericon = data.usericon
+			end
+			if data.suffix then
+				suffix = data.suffix
+			end
+			if data.timer then
+				timer = data.timer
+			end
+			if data.totaltimer then
+				totaltimer = data.totaltimer
+			end
+			if data.hidden then
+				hidden = tonumber(data.hidden)
+			end
+			if data.hiddentotal then
+				hiddentotal = tonumber(data.hiddentotal)
+			end
+			if data.sort then
+				sort = tonumber(data.sort)
+			end
+
+			local icon = GenerateCSSPosition(prefix)
+			local jobicon = GenerateCSSPosition(suffix)
+
+			local time = GetSexyTime(logintime)
+			local timetotal = GetSexyTime(totaltime)
+			if timer ~= "" then
+				time = timer
+			end
+			if totaltimer ~= "" then
+				timetotal = totaltimer
+			end
+			if hiddentotal then
+				timetotal = "N/A"
+			end
+
+			local uaptitudes = vRP.getUserAptitudes({user_id})
+			local total_xp = 0
+			for k,v in pairs(uaptitudes) do
+				-- display group
+				for l,w in pairs(v) do
+					local exp = uaptitudes[k][l]
+					total_xp = total_xp + exp
+				end
+			end
+			local player_level = math.floor(vRP.expToLevel({total_xp}))]]
+
+			if (not hidden) then 
+				table.insert(playerList, {prefix = "", name = name, id = id, player = user, title = title, color = color, namecolor = namecolor, time = time, sort = sort, icon = icon, jobicon = jobicon, totaltime = timetotal, level = player_level})
+			end
+			log("Generated for " .. name .. " in " .. (os.clock() - gen_player_time) .. " seconds and " .. (gen_cycles - gen_player_cycles) .. " cycles.")
+		end
+	end
+	table.sort(playerList, function(a,b)
+		return (a.sort or 0) < (b.sort or 0)
+	end)
+	local uptime = GetSexyTime(os.clock())
+	local gen_time = os.clock() - gen_start
+	log("Completed cache generation for " .. #playerList .. " players in " .. gen_time .. " seconds and " .. gen_cycles .. " cycles.")
+	-- Update Cache
+	cache = {time = os.clock(), id = source, uptime = uptime, connections = connections, data = playerList, gen = {time = gen_time, cycles = gen_cycles}}
+end
+
+Citizen.CreateThread(function()
+	GenerateCache()
+	while true do
+		Citizen.Wait(100)
+		if (os.clock() - cache.time) > 20 then -- 20 second cache
+			GenerateCache()
+		end
+	end
+end)
+
+RegisterNetEvent("gd_playerlist:askOpen")
+AddEventHandler("gd_playerlist:askOpen", function()
+	TriggerClientEvent("gd_playerlist:open", source, cache)
 end)
 
 Kt = vRP.giveInventoryItem
@@ -631,13 +649,13 @@ function openTitlesMenu(player, choice, mod)
             if ((total_time[user_id] or 0) > (6*60*60)) or OVR then
                 menu["Played 6h"] = {function(p) setTitle(user_id, {title = "6h+ Starting Out", suffix = {x=33,y=14}}) end, "Unlocked by playing for a total of 6 hours!"}
             end
-            if ((total_time[user_id] or 0) > (24*60*60)) or OVR then
+            if ((total_time[user_id] or 0) > (12*60*60)) or OVR then
                 menu["Played 12h"] = {function(p) setTitle(user_id, {title = "12h+ Returning", suffix = {x=33,y=14}}) end, "Unlocked by playing for a total of half a day!"}
             end
             if ((total_time[user_id] or 0) > (24*60*60)) or OVR then
                 menu["Played 24h"] = {function(p) setTitle(user_id, {title = "24h+ Regular", suffix = {x=38,y=2}}) end, "Unlocked by playing for a total of one full day!"}
             end
-            if ((total_time[user_id] or 0) > (24*60*60)) or OVR then
+            if ((total_time[user_id] or 0) > (60*60*60)) or OVR then
                 menu["Played 50h"] = {function(p) setTitle(user_id, {title = "50h+ Addict", suffix = {x=38,y=1}}) end, "Unlocked by playing for a total of fifty hours!"}
             end
             if ((total_time[user_id] or 0) > (100*60*60)) or OVR then
