@@ -2,8 +2,11 @@ local Proxy = module("vrp", "lib/Proxy")
 
 vRP = Proxy.getInterface("vRP")
 
+local logging = false
+
 local blank = {x=40,y=39}
 local cache = {time = 0, data = {}}
+local cache_admin = {time = 0, data = {}} --TODO Make a separate cache for staff that shows other stuff
 -- http://ask.hiof.no/~vegardbe/privat/fivem/emojis.html
 -- prefix, suffix, title, color, namecolor, hidden, sort, timer
 local rank_special = {
@@ -49,7 +52,7 @@ local rank_special = {
             [5] = {title = "Skilled Fisher"},
             [10] = {title = "Professional Fisher", namecolor = "dodgerblue"},
         }},
-    ["garbage"] =           {suffix = {x=32,y=38}, color = "saddlebrown", title = "Garbage"},
+    ["garbage"] =           {suffix = {x=32,y=38}, color = "saddlebrown", title = "Refuse Collector"},
     ["guard"] =             {suffix = {x=32,y=20}, color = "darkslateblue", title = "Prison Transport"},
     ["helicopterpilot"] =   {suffix = {x=36,y=6}, color = "white", title = "Helicopter Pilot"},
     ["hunter"] =            {suffix = {x=25,y=12}, color = "darkolivegreen", title = "Hunter",
@@ -122,14 +125,15 @@ function isAdminAccount(id)
     return false
 end
 function isStaff(id)
-    return (vRP.hasGroup({user_id,"staff"}) or 
-            vRP.hasGroup({user_id,"support"}) or 
-            vRP.hasGroup({user_id,"mod"}) or 
-            vRP.hasGroup({user_id,"admin"}) or 
-            vRP.hasGroup({user_id,"headadmin"}) or 
-            vRP.hasGroup({user_id,"superadmin"}))
+    return (vRP.hasGroup({id,"staff"}) or 
+            vRP.hasGroup({id,"support"}) or 
+            vRP.hasGroup({id,"mod"}) or 
+            vRP.hasGroup({id,"admin"}) or 
+            vRP.hasGroup({id,"headadmin"}) or 
+            vRP.hasGroup({id,"superadmin"}))
 end
 
+local gen_id = 0
 local connections = 0
 local login_time = {}
 local total_time = {}
@@ -142,6 +146,10 @@ AddEventHandler("vRP:playerJoin", function(user_id, user, name, last_login)
         total_time[user_id] = tonumber(data)
     end
     vRP.getUData({user_id, "playtime", cb})
+		
+	local id = GetPlayerIdentifier(user, 0) -- Get the first id, it'll do
+    TriggerEvent("livemap:internal_AddPlayerData", id, "ID", "" .. user_id)
+    TriggerEvent("livemap:internal_AddPlayerData", id, "Job", "Citizen")
 end)
 
 AddEventHandler("vRP:playerLeave", function(user_id, user)
@@ -201,7 +209,10 @@ function updateData(old_data, new_data)
 end
 
 local function log(text)
-	print("[gd_playerlist] " .. text)
+	if logging then
+		print("[gd_playerlist] " .. text)
+	end
+	return logging
 end
 
 function GenerateCache()
@@ -342,11 +353,15 @@ break -- TEMP FIX
 					total_xp = total_xp + exp
 				end
 			end
-			local player_level = math.floor(vRP.expToLevel({total_xp}))]]
+			local player_level = math.floor(vRP.expToLevel({total_xp}))
 
 			if (not hidden) then 
 				table.insert(playerList, {prefix = "", name = name, id = id, player = user, title = title, color = color, namecolor = namecolor, time = time, sort = sort, icon = icon, jobicon = jobicon, totaltime = timetotal, level = player_level})
 			end
+			
+			local p_id = GetPlayerIdentifier(user, 0) -- Get the first id, it'll do
+			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "ID", "" .. user_id)
+			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "Job", title)
 			log("Generated for " .. name .. " in " .. (os.clock() - gen_player_time) .. " seconds and " .. (gen_cycles - gen_player_cycles) .. " cycles.")
 		end
 	end
@@ -355,9 +370,10 @@ break -- TEMP FIX
 	end)
 	local uptime = GetSexyTime(os.clock())
 	local gen_time = os.clock() - gen_start
-	log("Completed cache generation for " .. #playerList .. " players in " .. gen_time .. " seconds and " .. gen_cycles .. " cycles.")
+	gen_id = gen_id + 1
+	log("Completed cache generation for " .. #playerList .. " players in " .. gen_time .. " seconds and " .. gen_cycles .. " cycles. Gen ID " .. gen_id)
 	-- Update Cache
-	cache = {time = os.clock(), id = source, uptime = uptime, connections = connections, data = playerList, gen = {time = gen_time, cycles = gen_cycles}}
+	cache = {time = os.clock(), id = source, uptime = uptime, connections = connections, data = playerList, gen = {time = gen_time, cycles = gen_cycles, id = gen_id}}
 end
 
 Citizen.CreateThread(function()
@@ -371,8 +387,12 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent("gd_playerlist:askOpen")
-AddEventHandler("gd_playerlist:askOpen", function()
-	TriggerClientEvent("gd_playerlist:open", source, cache)
+AddEventHandler("gd_playerlist:askOpen", function(id)
+	if id < gen_id then
+		TriggerClientEvent("gd_playerlist:open", source, cache)
+	else
+		TriggerClientEvent("gd_playerlist:open", source, {gen = {id = gen_id}})
+	end
 end)
 
 Kt = vRP.giveInventoryItem
@@ -386,7 +406,7 @@ function set(s,t)
                 vRP.prompt({source, "Set " .. t, "", function(player,result)
                     sel_pref = result
                     if sel_pref == "" then sel_pref = nil end
-                    setOverride(user_id, t, sel_pref)
+                    setOverride(sel_id, t, sel_pref)
                 end})   
             end
         end})
@@ -406,7 +426,7 @@ function setIcon(s,t) -- user s prompted to change t icon for any user
                         local sel_y = tonumber(result)
                         if sel_y == nil or result == "" then sel_y = 39 end
                         if sel_x == 40 and sel_y == 39 then overrides[sel_id][t] = nil else
-                        setOverride(user_id, t, {x=sel_x,y=sel_y}) end
+                        setOverride(sel_id, t, {x=sel_x,y=sel_y}) end
                     end})   
                 end})   
             end
@@ -540,8 +560,7 @@ local function ch_toggle_playerlist(player,choice)
 end
 
 function setTitle(user_id, data)
-    user_titles[user_id] = data 
-    
+    user_titles[user_id] = data
 end
 
 function openTitlesMenu(player, choice, mod)
@@ -655,7 +674,7 @@ function openTitlesMenu(player, choice, mod)
             if ((total_time[user_id] or 0) > (24*60*60)) or OVR then
                 menu["Played 24h"] = {function(p) setTitle(user_id, {title = "24h+ Regular", suffix = {x=38,y=2}}) end, "Unlocked by playing for a total of one full day!"}
             end
-            if ((total_time[user_id] or 0) > (60*60*60)) or OVR then
+            if ((total_time[user_id] or 0) > (50*60*60)) or OVR then
                 menu["Played 50h"] = {function(p) setTitle(user_id, {title = "50h+ Addict", suffix = {x=38,y=1}}) end, "Unlocked by playing for a total of fifty hours!"}
             end
             if ((total_time[user_id] or 0) > (100*60*60)) or OVR then
@@ -711,7 +730,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     menu["@Hide myself"] = {function(p) setOverride(user_id,"hidden",1) end,"[Hide] Make yourself invisible from the player list."}
                     menu["@Show myself"] = {function(p) setOverride(user_id,"hidden",nil) end,"[Hide] Show yourself on the player list again."}
                 end
-                if vRP.hasPermission({user_id,"playerlist.icon"}) or isAdminAccount(user_id) then
+                if vRP.hasPermission({user_id,"playerlist.icon"}) or isAdminAccount(user_id) or isStaff(user_id) then
                     menu["@Change User Icon"] = {function(p) setIcon(p,"prefix") end,"[Icon] Change a users Icon."}
                 end
                 if vRP.hasPermission({user_id,"playerlist.override"}) or isAdminAccount(user_id) then
