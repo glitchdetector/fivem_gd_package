@@ -82,6 +82,7 @@ local rank_special = {
             [9] = {title = "Police Colonel+"},
             [10] = {title = "Police Superintendent", namecolor = "blue"},
         }},
+    ["snowplow"] =          {suffix = {x=35,y=39}, color = "white", title = "Snowplow Driver"},
     ["taxi"] =              {suffix = {x=36,y=26}, color = "gold", title = "Taxi"},
     ["trucker"] =           {suffix = {x=36,y=32}, color = "darkgreen", title = "Trucker",
         levelnames = {"trucking", "trucking"},
