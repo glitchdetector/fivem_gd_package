@@ -151,6 +151,7 @@ AddEventHandler("vRP:playerJoin", function(user_id, user, name, last_login)
 	local id = GetPlayerIdentifier(user, 0) -- Get the first id, it'll do
     TriggerEvent("livemap:internal_AddPlayerData", id, "ID", "" .. user_id)
     TriggerEvent("livemap:internal_AddPlayerData", id, "Job", "Citizen")
+    TriggerEvent("livemap:internal_AddPlayerData", id, "Online", "00m")
 end)
 
 AddEventHandler("vRP:playerLeave", function(user_id, user)
@@ -363,7 +364,7 @@ break -- TEMP FIX
 			local p_id = GetPlayerIdentifier(user, 0) -- Get the first id, it'll do
 			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "ID", "" .. user_id)
 			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "Job", title)
-			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "name", "#" .. user_id .. " | " .. name)
+			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "Online", time)
 			log("Generated for " .. name .. " in " .. (os.clock() - gen_player_time) .. " seconds and " .. (gen_cycles - gen_player_cycles) .. " cycles.")
 		end
 	end
@@ -759,7 +760,7 @@ function openTitlesMenu(player, choice, mod)
                 menu["NarwhalCorp Employee"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Employee", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.annalist"}) or OVR then
-                menu["NarwhalCorp Annalist"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Annalist", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Analyst"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Analyst", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.technician"}) or OVR then
                 menu["NarwhalCorp Technician"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Technician", suffix = {x=3,y=41}}) end, ""}
