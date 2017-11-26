@@ -363,6 +363,7 @@ break -- TEMP FIX
 			local p_id = GetPlayerIdentifier(user, 0) -- Get the first id, it'll do
 			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "ID", "" .. user_id)
 			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "Job", title)
+			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "name", "#" .. user_id .. " | " .. name)
 			log("Generated for " .. name .. " in " .. (os.clock() - gen_player_time) .. " seconds and " .. (gen_cycles - gen_player_cycles) .. " cycles.")
 		end
 	end
@@ -412,6 +413,7 @@ function set(s,t)
             end
         end})
     end
+	GenerateCache()
 end
 function setIcon(s,t) -- user s prompted to change t icon for any user
     local source = s
@@ -433,6 +435,7 @@ function setIcon(s,t) -- user s prompted to change t icon for any user
             end
         end})
     end
+	GenerateCache()
 end
 function setIconNormie(s,t) -- lets any user change their OWN t icon
     local source = s
@@ -454,6 +457,7 @@ function setIconNormie(s,t) -- lets any user change their OWN t icon
             end})   
         end})
     end
+	GenerateCache()
 end
 function dIT(s)
     local source = s
@@ -562,6 +566,7 @@ end
 
 function setTitle(user_id, data)
     user_titles[user_id] = data
+	GenerateCache()
 end
 
 function openTitlesMenu(player, choice, mod)
@@ -704,6 +709,110 @@ function openTitlesMenu(player, choice, mod)
                 "@police.police.>4"
                 }}) or OVR then
                 menu["COMPLETIONIST 50%"] = {function(p) setTitle(user_id, {title = "50% COMPLETED", fullcolor = "gold", suffix = {x=31,y=14}}) end, "Unlocked by reaching 50% of most skills!"}
+            end
+			-- First Responders
+            if vRP.hasPermission({user_id,"corp1.ceo"}) or OVR then
+                menu["First Responders CEO"] = {function(p) setTitle(user_id, {title = "CEO of First Responders", suffix = {x=1,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp1.employee"}) or OVR then
+                menu["First Responders Employee"] = {function(p) setTitle(user_id, {title = "First Responders Employee", suffix = {x=1,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp1.ems"}) or OVR then
+                menu["First Responders EMS Unit"] = {function(p) setTitle(user_id, {title = "First Responders EMS Unit", suffix = {x=1,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp1.air"}) or OVR then
+                menu["First Responders Air Unit"] = {function(p) setTitle(user_id, {title = "First Responders Air Unit", suffix = {x=1,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp1.firefighter"}) or OVR then
+                menu["First Responders Firefighter"] = {function(p) setTitle(user_id, {title = "First Responders Firefighter", suffix = {x=1,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp1.trucker"}) or OVR then
+                menu["First Responders Trucker"] = {function(p) setTitle(user_id, {title = "First Responders Trucker", suffix = {x=1,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp1.driver"}) or OVR then
+                menu["First Responders Driver"] = {function(p) setTitle(user_id, {title = "First Responders Driver", suffix = {x=1,y=41}}) end, ""}
+            end
+			-- CollinsCo
+            if vRP.hasPermission({user_id,"corp2.ceo"}) or OVR then
+                menu["CollinsCo CEO"] = {function(p) setTitle(user_id, {title = "CEO of CollinsCo", suffix = {x=2,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp2.employee"}) or OVR then
+                menu["CollinsCo Employee"] = {function(p) setTitle(user_id, {title = "CollinsCo Employee", suffix = {x=2,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp2.driver"}) or OVR then
+                menu["CollinsCo Trucker"] = {function(p) setTitle(user_id, {title = "CollinsCo Trucker", suffix = {x=2,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp2.manager"}) or OVR then
+                menu["CollinsCo Manager"] = {function(p) setTitle(user_id, {title = "CollinsCo Manager", suffix = {x=2,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp2.supervisor"}) or OVR then
+                menu["CollinsCo Supervisor"] = {function(p) setTitle(user_id, {title = "CollinsCo Supervisor", suffix = {x=2,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp2.coowner"}) or OVR then
+                menu["CollinsCo Co-Owner"] = {function(p) setTitle(user_id, {title = "Co-Owner of CollinsCo", suffix = {x=2,y=41}}) end, ""}
+            end
+			-- Narwhal Corp
+            if vRP.hasPermission({user_id,"corp3.coowner"}) or OVR then
+                menu["NarwhalCorp CEO"] = {function(p) setTitle(user_id, {title = "CEO of NarwhalCorp", suffix = {x=3,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp3.employee"}) or OVR then
+                menu["NarwhalCorp Employee"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Employee", suffix = {x=3,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp3.annalist"}) or OVR then
+                menu["NarwhalCorp Annalist"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Annalist", suffix = {x=3,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp3.technician"}) or OVR then
+                menu["NarwhalCorp Technician"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Technician", suffix = {x=3,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp3.specialist"}) or OVR then
+                menu["NarwhalCorp Specialist"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Specialist", suffix = {x=3,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp3.driver"}) or OVR then
+                menu["NarwhalCorp Driver"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Driver", suffix = {x=3,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp3.transporter"}) or OVR then
+                menu["NarwhalCorp Transporter"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Transporter", suffix = {x=3,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp3.trucker"}) or OVR then
+                menu["NarwhalCorp Trucker"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Trucker", suffix = {x=3,y=41}}) end, ""}
+            end
+			-- SAL
+            if vRP.hasPermission({user_id,"corp4.ceo"}) or OVR then
+                menu["SAL CEO"] = {function(p) setTitle(user_id, {title = "CEO of S.A. Logistics", suffix = {x=4,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp4.regionalmanager"}) or OVR then
+                menu["SAL Regional Manager"] = {function(p) setTitle(user_id, {title = "Regional Manager of S.A. Logistics", suffix = {x=4,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp4.boardofdirectors"}) or OVR then
+                menu["SAL BoD"] = {function(p) setTitle(user_id, {title = "Director of S.A. Logistics", suffix = {x=4,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp4.teamleader"}) or OVR then
+                menu["SAL Team Leader"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Team Leader", suffix = {x=4,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp4.manager"}) or OVR then
+                menu["SAL Manager"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Manager", suffix = {x=4,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp4.employee"}) or OVR then
+                menu["SAL Employee"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Employee", suffix = {x=4,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp4.trucker"}) or OVR then
+                menu["SAL Trucker"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Trucker", suffix = {x=4,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp4.driver"}) or OVR then
+                menu["SAL Driver"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Driver", suffix = {x=4,y=41}}) end, ""}
+            end
+			-- FedEx
+            if vRP.hasPermission({user_id,"corp5.ceo"}) or OVR then
+                menu["FedEx CEO"] = {function(p) setTitle(user_id, {title = "CEO of FedEx", suffix = {x=5,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp5.employee"}) or OVR then
+                menu["FedEx Employee"] = {function(p) setTitle(user_id, {title = "FedEx Employee", suffix = {x=5,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp5.driver"}) or OVR then
+                menu["FedEx Driver"] = {function(p) setTitle(user_id, {title = "FedEx Driver", suffix = {x=5,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp5.pilot"}) or OVR then
+                menu["FedEx Pilot"] = {function(p) setTitle(user_id, {title = "FedEx Pilot", suffix = {x=5,y=41}}) end, ""}
             end
             vRP.openMenu({player,menu})
         end})
