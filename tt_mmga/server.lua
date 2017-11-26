@@ -12,6 +12,15 @@ local function isThisGuyPartOfAnotherCompany(id, corpno)
 	end
 	return (r and (not vRP.hasPermission({id, "corp"..corpno..".employee"})))
 end
+local function isCEO(id)
+	local r = false
+	for i = 1, 10 do
+		if vRP.hasPermission({id, "corp"..i..".ceo"}) then
+			return true
+		end
+	end
+	return false
+end
 
 function tryGive(user, group)
 	local source = user
@@ -23,15 +32,25 @@ function tryGive(user, group)
             if sel_id then
 				local user_source = vRP.getUserSource({sel_id})
 				if user_source then
+					local name = GetPlayerName(user_source)
 					if not isThisGuyPartOfAnotherCompany(sel_id, "0") then
 						local secret = "Tycoon"
 						vRP.prompt({source, "Confirm by typing: " .. secret, "", function(player,result)
 							if result == secret then
-								vRP.request({user_source, "You've been invited as " .. group, 120, function(player,ok)
-									if ok then
-										vRP.addUserGroup({sel_id, group})	
-									end
-								end})   
+								if isCEO(sel_id) then
+									vRP.request({source, "You cannot hire a CEO.", 120, function(player,ok)
+									end})   								
+								else
+									vRP.request({user_source, "You've been invited as " .. group, 120, function(player,ok)
+										if ok then
+											vRP.addUserGroup({sel_id, group})	
+											vRP.request({user_source, "You've successfully joined the company.", 120, function(player,ok)
+											end})   
+											vRP.request({source, name .. " was successfully added to the company.", 120, function(player,ok)
+											end})   
+										end
+									end})   
+								end
 							end
 						end})   
 					else
@@ -53,6 +72,7 @@ function tryFire(user, corp)
             if sel_id then
 				local user_source = vRP.getUserSource({sel_id})
 				if user_source then
+					local name = GetPlayerName(user_source)
 					if not isThisGuyPartOfAnotherCompany(sel_id, corp) then
 						local secret = "Hellfire"
 						vRP.prompt({source, "Confirm by typing: " .. secret, "", function(player,result)
@@ -63,6 +83,8 @@ function tryFire(user, corp)
 								else
 									vRP.addUserGroup({sel_id, "nocorp"})
 									vRP.request({user_source, "You've have been fired from your company.", 120, function(player,ok)
+									end})   
+									vRP.request({source, name .. " was fired from your company.", 120, function(player,ok)
 									end})   
 								end
 							end
@@ -91,44 +113,56 @@ vRP.registerMenuBuilder({"main", function(add, data)
 					
 					if vRP.hasPermission({user_id,"corp1.ceo"}) then
 						menu["(FRLLC)"] = {function(p) end,"You're the CEO of FRLLC!"}
-						menu["FRLLC EMS"] = {function(p) tryGive(p,"corp1.responders.ems") end,""}
-						menu["FRLLC Air"] = {function(p) tryGive(p,"corp1.responders.air") end,""}
-						menu["FRLLC Firefighter"] = {function(p) tryGive(p,"corp1.responders.firefighter") end,""}
-						menu["FRLLC Trucker"] = {function(p) tryGive(p,"corp1.responders.trucker") end,""}
-						menu["{Fire from company} FRLLC"] = {function(p) tryFire(p,"1") end,""}
+						menu["FRLLC EMS"] = {function(p) tryGive(p,"corp1.responders.ems") end,"Hire a person as EMS"}
+						menu["FRLLC Air"] = {function(p) tryGive(p,"corp1.responders.air") end,"Hire a person as Air"}
+						menu["FRLLC Firefighter"] = {function(p) tryGive(p,"corp1.responders.firefighter") end,"Hire a person as Firefighter"}
+						menu["FRLLC Trucker"] = {function(p) tryGive(p,"corp1.responders.trucker") end,"Hire a person as Trucker"}
+						menu["{Fire from company} FRLLC"] = {function(p) tryFire(p,"1") end,"Fire a person from the company"}
 						isCEO = true
 					end
 					if vRP.hasPermission({user_id,"corp2.ceo"}) then
 						menu["(CollinsCo)"] = {function(p) end,"You're the CEO of CollinsCo!"}
-						menu["CollinsCo Trucker"] = {function(p) tryGive(p,"corp2.collinsco.trucker") end,""}
-						menu["CollinsCo Manager"] = {function(p) tryGive(p,"corp2.collinsco.manager") end,""}
-						menu["CollinsCo Supervisor"] = {function(p) tryGive(p,"corp2.collinsco.supervisor") end,""}
-						menu["CollinsCo Co-Owner"] = {function(p) tryGive(p,"corp2.collinsco.coowner") end,""}
-						menu["{Fire from company} CollinsCo"] = {function(p) tryFire(p,"2") end,""}
+						menu["CollinsCo Trucker"] = {function(p) tryGive(p,"corp2.collinsco.trucker") end,"Hire a person as Trucker"}
+						menu["CollinsCo Manager"] = {function(p) tryGive(p,"corp2.collinsco.manager") end,"Hire a person as Manager"}
+						menu["CollinsCo Supervisor"] = {function(p) tryGive(p,"corp2.collinsco.supervisor") end,"Hire a person as Supervisor"}
+						menu["CollinsCo Co-Owner"] = {function(p) tryGive(p,"corp2.collinsco.coowner") end,"Hire a person as Co-Owner"}
+						menu["{Fire from company} CollinsCo"] = {function(p) tryFire(p,"2") end,"Fire a person from the company"}
 						isCEO = true
 					end
 					if vRP.hasPermission({user_id,"corp3.ceo"}) then
 						menu["(NarwhalCorp)"] = {function(p) end,"You're the CEO of NarwhalCorp!"}
-						menu["NarwhalCorp Analyst"] = {function(p) tryGive(p,"corp3.narwal.annalist") end,""}
-						menu["NarwhalCorp Technician"] = {function(p) tryGive(p,"corp3.narwal.technician") end,""}
-						menu["NarwhalCorp Specialist"] = {function(p) tryGive(p,"corp3.narwal.specialist") end,""}
-						menu["NarwhalCorp Transporter"] = {function(p) tryGive(p,"corp3.narwal.transporter") end,""}
-						menu["NarwhalCorp Trucker"] = {function(p) tryGive(p,"corp3.narwal.trucker") end,""}
-						menu["{Fire from company} NarwhalCorp"] = {function(p) tryFire(p,"3") end,""}
+						menu["NarwhalCorp Analyst"] = {function(p) tryGive(p,"corp3.narwal.annalist") end,"Hire a person as Analyst"}
+						menu["NarwhalCorp Technician"] = {function(p) tryGive(p,"corp3.narwal.technician") end,"Hire a person as Technician"}
+						menu["NarwhalCorp Specialist"] = {function(p) tryGive(p,"corp3.narwal.specialist") end,"Hire a person as Specialist"}
+						menu["NarwhalCorp Transporter"] = {function(p) tryGive(p,"corp3.narwal.transporter") end,"Hire a person as Transporter"}
+						menu["NarwhalCorp Trucker"] = {function(p) tryGive(p,"corp3.narwal.trucker") end,"Hire a person as Trucker"}
+						menu["{Fire from company} NarwhalCorp"] = {function(p) tryFire(p,"3") end,"Fire a person from the company"}
 						isCEO = true
 					end
 					if vRP.hasPermission({user_id,"corp4.ceo"}) then
 						menu["(SAL)"] = {function(p) end,"You're the CEO of SAL!"}
-						menu["SAL Board of Directors"] = {function(p) tryGive(p,"corp4.sal.boardofdirectors") end,""}
-						menu["SAL Regional Manager"] = {function(p) tryGive(p,"corp4.sal.regionalmanager") end,""}
-						menu["SAL Manager"] = {function(p) tryGive(p,"corp4.sal.manager") end,""}
-						menu["SAL Team Leader"] = {function(p) tryGive(p,"corp4.sal.teamleader") end,""}
-						menu["SAL Trucker"] = {function(p) tryGive(p,"corp4.sal.trucker") end,""}
-						menu["{Fire from company} SAL"] = {function(p) tryFire(p,"4") end,""}
+						menu["SAL Board of Directors"] = {function(p) tryGive(p,"corp4.sal.boardofdirectors") end,"Hire a person as Board of Directors"}
+						menu["SAL Regional Manager"] = {function(p) tryGive(p,"corp4.sal.regionalmanager") end,"Hire a person as Regional Manager"}
+						menu["SAL Manager"] = {function(p) tryGive(p,"corp4.sal.manager") end,"Hire a person as Manager"}
+						menu["SAL Team Leader"] = {function(p) tryGive(p,"corp4.sal.teamleader") end,"Hire a person as Team Leader"}
+						menu["SAL Trucker"] = {function(p) tryGive(p,"corp4.sal.trucker") end,"Hire a person as Trucker"}
+						menu["{Fire from company} SAL"] = {function(p) tryFire(p,"4") end,"Fire a person from the company"}
 						isCEO = true
 					end
 					
 					if not isCEO then
+						if vRP.hasPermission({user_id,"corp1.employee"}) then
+							menu["(FRLLC)"] = {function(p) end,"You're an employee for FRLLC!"}
+						end
+						if vRP.hasPermission({user_id,"corp2.employee"}) then
+							menu["(CollinsCo)"] = {function(p) end,"You're an employee for CollinsCo!"}
+						end
+						if vRP.hasPermission({user_id,"corp3.employee"}) then
+							menu["(NarwhalCorp)"] = {function(p) end,"You're an employee for NarwhalCorp!"}
+						end
+						if vRP.hasPermission({user_id,"corp4.employee"}) then
+							menu["(SAL)"] = {function(p) end,"You're an employee for SAL!"}
+						end
 						menu["You're not a CEO"] = {function(p) end, ""}
 					end
 					
