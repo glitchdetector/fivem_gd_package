@@ -27,7 +27,7 @@ local rank_special = {
             [10] = {title = "Professional Train Conductor", namecolor = "chocolate"},
         }},
     ["emergency"] =         {suffix = {x=36,y=22}, color = "tomato", title = "EMS",
-        levelnames = {"emergency", "ems"},
+        levelnames = {"ems", "ems"},
         levels = {
             [5] = {title = "Skilled EMS"},
             [10] = {title = "Professional EMS", namecolor = "tomato"},
@@ -41,7 +41,7 @@ local rank_special = {
             [20] = {title = "Professional Farmer", namecolor = "chocolate"},
         }},
     ["firefighter"] =       {suffix = {x=9,y=32}, color = "red", title = "Firefighter",
-        levelnames = {"emergency", "firefighter"},
+        levelnames = {"ems", "firefighter"},
         levels = {
             [5] = {title = "Skilled Firefighter"},
             [10] = {title = "Professional Firefighter", namecolor = "red"},
@@ -713,94 +713,94 @@ function openTitlesMenu(player, choice, mod)
             end
 			-- First Responders
             if vRP.hasPermission({user_id,"corp1.ceo"}) or OVR then
-                menu["First Responders CEO"] = {function(p) setTitle(user_id, {title = "CEO of First Responders", suffix = {x=1,y=41}}) end, ""}
+                menu["First Responders CEO"] = {function(p) setTitle(user_id, {title = "CEO of First Responders", color = "tomato", suffix = {x=1,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp1.employee"}) or OVR then
-                menu["First Responders Employee"] = {function(p) setTitle(user_id, {title = "First Responders Employee", suffix = {x=1,y=41}}) end, ""}
+                menu["First Responders Employee"] = {function(p) setTitle(user_id, {title = "First Responders Employee", color = "tomato", suffix = {x=1,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp1.ems"}) or OVR then
-                menu["First Responders EMS Unit"] = {function(p) setTitle(user_id, {title = "First Responders EMS Unit", suffix = {x=1,y=41}}) end, ""}
+                menu["First Responders EMS Unit"] = {function(p) setTitle(user_id, {title = "First Responders EMS Unit", color = "tomato", suffix = {x=1,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp1.air"}) or OVR then
-                menu["First Responders Air Unit"] = {function(p) setTitle(user_id, {title = "First Responders Air Unit", suffix = {x=1,y=41}}) end, ""}
+                menu["First Responders Air Unit"] = {function(p) setTitle(user_id, {title = "First Responders Air Unit", color = "tomato", suffix = {x=1,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp1.firefighter"}) or OVR then
-                menu["First Responders Firefighter"] = {function(p) setTitle(user_id, {title = "First Responders Firefighter", suffix = {x=1,y=41}}) end, ""}
+                menu["First Responders Firefighter"] = {function(p) setTitle(user_id, {title = "First Responders Firefighter", color = "tomato", suffix = {x=1,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp1.trucker"}) or OVR then
-                menu["First Responders Trucker"] = {function(p) setTitle(user_id, {title = "First Responders Trucker", suffix = {x=1,y=41}}) end, ""}
+                menu["First Responders Trucker"] = {function(p) setTitle(user_id, {title = "First Responders Trucker", color = "tomato", suffix = {x=1,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp1.driver"}) or OVR then
-                menu["First Responders Driver"] = {function(p) setTitle(user_id, {title = "First Responders Driver", suffix = {x=1,y=41}}) end, ""}
+                menu["First Responders Driver"] = {function(p) setTitle(user_id, {title = "First Responders Driver", color = "tomato", suffix = {x=1,y=41}}) end, ""}
             end
 			-- CollinsCo
             if vRP.hasPermission({user_id,"corp2.ceo"}) or OVR then
-                menu["CollinsCo CEO"] = {function(p) setTitle(user_id, {title = "CEO of CollinsCo", suffix = {x=2,y=41}}) end, ""}
+                menu["CollinsCo CEO"] = {function(p) setTitle(user_id, {title = "CEO of CollinsCo", color = "red", suffix = {x=2,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp2.employee"}) or OVR then
-                menu["CollinsCo Employee"] = {function(p) setTitle(user_id, {title = "CollinsCo Employee", suffix = {x=2,y=41}}) end, ""}
+                menu["CollinsCo Employee"] = {function(p) setTitle(user_id, {title = "CollinsCo Employee", color = "red", suffix = {x=2,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp2.driver"}) or OVR then
-                menu["CollinsCo Trucker"] = {function(p) setTitle(user_id, {title = "CollinsCo Trucker", suffix = {x=2,y=41}}) end, ""}
+                menu["CollinsCo Trucker"] = {function(p) setTitle(user_id, {title = "CollinsCo Trucker", color = "red", suffix = {x=2,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp2.manager"}) or OVR then
-                menu["CollinsCo Manager"] = {function(p) setTitle(user_id, {title = "CollinsCo Manager", suffix = {x=2,y=41}}) end, ""}
+                menu["CollinsCo Manager"] = {function(p) setTitle(user_id, {title = "CollinsCo Manager", color = "red", suffix = {x=2,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp2.supervisor"}) or OVR then
-                menu["CollinsCo Supervisor"] = {function(p) setTitle(user_id, {title = "CollinsCo Supervisor", suffix = {x=2,y=41}}) end, ""}
+                menu["CollinsCo Supervisor"] = {function(p) setTitle(user_id, {title = "CollinsCo Supervisor", color = "red", suffix = {x=2,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp2.coowner"}) or OVR then
-                menu["CollinsCo Co-Owner"] = {function(p) setTitle(user_id, {title = "Co-Owner of CollinsCo", suffix = {x=2,y=41}}) end, ""}
+                menu["CollinsCo Co-Owner"] = {function(p) setTitle(user_id, {title = "Co-Owner of CollinsCo", color = "red", suffix = {x=2,y=41}}) end, ""}
             end
 			-- Narwhal Corp
             if vRP.hasPermission({user_id,"corp3.coowner"}) or OVR then
-                menu["NarwhalCorp CEO"] = {function(p) setTitle(user_id, {title = "CEO of NarwhalCorp", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp CEO"] = {function(p) setTitle(user_id, {title = "CEO of NarwhalCorp", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.employee"}) or OVR then
-                menu["NarwhalCorp Employee"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Employee", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Employee"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Employee", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.annalist"}) or OVR then
-                menu["NarwhalCorp Analyst"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Analyst", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Analyst"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Analyst", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.technician"}) or OVR then
-                menu["NarwhalCorp Technician"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Technician", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Technician"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Technician", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.specialist"}) or OVR then
-                menu["NarwhalCorp Specialist"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Specialist", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Specialist"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Specialist", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.driver"}) or OVR then
-                menu["NarwhalCorp Driver"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Driver", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Driver"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Driver", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.transporter"}) or OVR then
-                menu["NarwhalCorp Transporter"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Transporter", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Transporter"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Transporter", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.trucker"}) or OVR then
-                menu["NarwhalCorp Trucker"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Trucker", suffix = {x=3,y=41}}) end, ""}
+                menu["NarwhalCorp Trucker"] = {function(p) setTitle(user_id, {title = "NarwhalCorp Trucker", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
 			-- SAL
             if vRP.hasPermission({user_id,"corp4.ceo"}) or OVR then
-                menu["SAL CEO"] = {function(p) setTitle(user_id, {title = "CEO of S.A. Logistics", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL CEO"] = {function(p) setTitle(user_id, {title = "CEO of S.A. Logistics", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp4.regionalmanager"}) or OVR then
-                menu["SAL Regional Manager"] = {function(p) setTitle(user_id, {title = "Regional Manager of S.A. Logistics", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL Regional Manager"] = {function(p) setTitle(user_id, {title = "Regional Manager of S.A. Logistics", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp4.boardofdirectors"}) or OVR then
-                menu["SAL BoD"] = {function(p) setTitle(user_id, {title = "Director of S.A. Logistics", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL BoD"] = {function(p) setTitle(user_id, {title = "Director of S.A. Logistics", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp4.teamleader"}) or OVR then
-                menu["SAL Team Leader"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Team Leader", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL Team Leader"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Team Leader", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp4.manager"}) or OVR then
-                menu["SAL Manager"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Manager", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL Manager"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Manager", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp4.employee"}) or OVR then
-                menu["SAL Employee"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Employee", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL Employee"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Employee", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp4.trucker"}) or OVR then
-                menu["SAL Trucker"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Trucker", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL Trucker"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Trucker", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp4.driver"}) or OVR then
-                menu["SAL Driver"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Driver", suffix = {x=4,y=41}}) end, ""}
+                menu["SAL Driver"] = {function(p) setTitle(user_id, {title = "S.A. Logistics Driver", color = "white", suffix = {x=4,y=41}}) end, ""}
             end
 			-- FedEx
             if vRP.hasPermission({user_id,"corp5.ceo"}) or OVR then
