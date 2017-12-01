@@ -753,7 +753,7 @@ function openTitlesMenu(player, choice, mod)
                 menu["CollinsCo Co-Owner"] = {function(p) setTitle(user_id, {title = "Co-Owner of CollinsCo", color = "red", suffix = {x=2,y=41}}) end, ""}
             end
 			-- Narwhal Corp
-            if vRP.hasPermission({user_id,"corp3.coowner"}) or OVR then
+            if vRP.hasPermission({user_id,"corp3.ceo"}) or OVR then
                 menu["NarwhalCorp CEO"] = {function(p) setTitle(user_id, {title = "CEO of NarwhalCorp", color = "cyan", suffix = {x=3,y=41}}) end, ""}
             end
             if vRP.hasPermission({user_id,"corp3.employee"}) or OVR then
