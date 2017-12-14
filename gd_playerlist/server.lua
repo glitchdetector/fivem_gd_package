@@ -573,7 +573,7 @@ function dACES(s)
         end})
     end
 end
-function dACES(s)
+function dACEC(s)
 	local source = s
     local user_id = vRP.getUserId({source})
     if user_id ~= nil then
