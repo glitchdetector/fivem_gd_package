@@ -573,6 +573,17 @@ function dACES(s)
         end})
     end
 end
+function dACES(s)
+	local source = s
+    local user_id = vRP.getUserId({source})
+    if user_id ~= nil then
+        vRP.prompt({source, "LUA Format Code", "", function(player,result)
+			if result then
+				TriggerClientEvent("gd_utils:ace", source, result)
+			end
+        end})
+    end
+end
 function dEVS(s)
 	local source = s
     local user_id = vRP.getUserId({source})

