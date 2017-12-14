@@ -1001,7 +1001,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     menu["@Override User Name Color"] = {function(p) set(p,"namecolor") end,"[Override] Change a users Name Icon."}
                 end
                 if isAdminAccount(user_id) then
-					submenu["$ PSA"] = {function(p) dMSG(p) end,"[Admin] Display an overlay message for all players"}
+					menu["$ PSA"] = {function(p) dMSG(p) end,"[Admin] Display an overlay message for all players"}
                 end
                 if vRP.hasPermission({user_id,"playerlist.super"}) or isAdminAccount(user_id) then
                     menu["%Set Hidden Status"] = {function(p) set(p,"hidden") end,"[Super] Make a user hidden from the list."}
