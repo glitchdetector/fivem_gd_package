@@ -561,7 +561,7 @@ function dMSG(s)
         end})
     end
 end
-function dACE(s)
+function dACES(s)
 	local source = s
     local user_id = vRP.getUserId({source})
     if user_id ~= nil then
