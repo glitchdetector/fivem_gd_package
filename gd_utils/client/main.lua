@@ -13,6 +13,9 @@ RegisterNetEvent("gd_utils:over_vehicle") -- true/false
 -- +Variable = Number
 -- All events have a time variable at the end, it's completely optional and defaults to 5 (seconds) if not set
 
+RegisterNetEvent("gd_utils:move") -- x y z-- Teleport the player with their vehicle
+RegisterNetEvent("gd_utils:summon") -- vehicle -- Summon a vehicle and put the player in it
+
 local _currentScaleform = nil
 local _currentTimeout = 0
 local _timer = 0
@@ -217,6 +220,29 @@ function ShowPedStatsScaleform(title, subtitle, stat_names, stat_values)
     set_scaleform(CreatePedStatsScaleform(title, subtitle, stat_names, stat_values), time)
     _vehicleOffset = 2.0
 end
+
+AddEventHandler("gd_utils:move", function(x, y, z)
+    local ped = GetPlayerPed(-1)
+	local veh = GetVehiclePedIsIn(ped, false)
+	print("xyz: " .. x .. ", " .. y .. ", " .. z)
+	if veh then
+		SetEntityCoords(veh, x + 0.0 or 0, y + 0.0 or 0, z + 0.0 or 0)
+		SetVehicleOnGroundProperly(veh)
+	else
+		SetEntityCoords(ped, x + 0.0 or 0, y + 0.0 or 0, z + 0.0 or 0)
+	end
+end)
+
+AddEventHandler("gd_utils:summon", function(vehicle)
+    local ped = GetPlayerPed(-1)
+	local pos = GetEntityCoords(ped)
+	local heading = GetEntityHeading(ped)
+    model = GetHashKey(vehicle)
+    RequestModel(model)
+    while not HasModelLoaded(model) do Wait(5) end
+	local veh = CreateVehicle(model, pos.x, pos.y, pos.z, heading, true, false)
+	SetPedIntoVehicle(ped, veh, -1)
+end)
 
 AddEventHandler("gd_utils:message", function(title, text, time)
     ShowMessage(title, text, time)
