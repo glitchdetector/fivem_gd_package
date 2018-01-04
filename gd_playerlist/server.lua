@@ -723,10 +723,16 @@ function openTitlesMenu(player, choice, mod)
                 menu["@Admin Title"] = {function(p) setTitle(user_id, {title = "Transport Tycoon Administrator", fullcolor = "teal", suffix = {x=37,y=23}}) end, "Admin Tag (issued by 'admin' group)"}
             end
             if vRP.hasGroup({user_id,"headadmin"}) or OVR then
-                menu["@Head Admin Title"] = {function(p) setTitle(user_id, {title = "Transport Tycoon Head Administrator", fullcolor = "red", suffix = {x=37,y=23}}) end, "Head Admin Tag (issued by 'headadmin' group)"}
+                menu["@Head Admin Title"] = {function(p) setTitle(user_id, {title = "Transport Tycoon Head Administrator", fullcolor = "lawngreen", suffix = {x=37,y=23}}) end, "Head Admin Tag (issued by 'headadmin' group)"}
             end
             if vRP.hasGroup({user_id,"superadmin"}) or OVR then
                 menu["@Superadmin Title"] = {function(p) setTitle(user_id, {title = "Transport Tycoon Developer", fullcolor = "fuchsia", suffix = {x=37,y=23}}) end, "Developer Tag (issued by 'superadmin' group)"}
+            end
+            if vRP.hasGroup({user_id,"cofounder"}) or OVR then
+                menu["@Co-Founder Title"] = {function(p) setTitle(user_id, {title = "Transport Tycoon Co-Founder", fullcolor = "red", suffix = {x=37,y=23}}) end, "Co-Founder Tag (issued by 'cofounder' group)"}
+            end
+            if vRP.hasGroup({user_id,"senioradmin"}) or OVR then
+                menu["@Senior Admin Title"] = {function(p) setTitle(user_id, {title = "Transport Tycoon Senior Administrator", fullcolor = "fuchsia", suffix = {x=37,y=23}}) end, "Senior Admin Tag (issued by 'senioradmin' group)"}
             end
             if vRP.hasGroup({user_id,"streamer"}) or OVR then
                 menu["@Streamer Title"] = {function(p) setTitle(user_id, {title = "Twitch Streamer", fullcolor = "fuchsia", suffix = {x=13,y=40}}) end, "Streamer Tag (issued by 'streamer' group)"}
@@ -851,8 +857,14 @@ function openTitlesMenu(player, choice, mod)
             if ((total_time[user_id] or 0) > (200*60*60)) or OVR then
                 menu["Played 200h"] = {function(p) setTitle(user_id, {title = "200h+ Tycoon Expert", suffix = {x=31,y=9}}) end, "Unlocked by playing for a total of two hundred hours!"}
             end
+            if ((total_time[user_id] or 0) > (300*60*60)) or OVR then
+                menu["Played 300h"] = {function(p) setTitle(user_id, {title = "300h+ Tycoon Master", suffix = {x=31,y=9}}) end, "Unlocked by playing for a total of three hundred hours!"}
+            end
+            if ((total_time[user_id] or 0) > (400*60*60)) or OVR then
+                menu["Played 400h"] = {function(p) setTitle(user_id, {title = "400h+ Tycoon Masterer", suffix = {x=31,y=9}}) end, "Unlocked by playing for a total of four hundred hours!"}
+            end
             if ((total_time[user_id] or 0) > (500*60*60)) or OVR then
-                menu["Played 500h"] = {function(p) setTitle(user_id, {title = "500h+ Tycoon Master", suffix = {x=31,y=9}}) end, "Unlocked by playing for a total of five hundred hours!"}
+                menu["Played 500h"] = {function(p) setTitle(user_id, {title = "500h+ Tycoon Grandmaster", suffix = {x=31,y=9}}) end, "Unlocked by playing for a total of five hundred hours!"}
             end
             if vRP.hasPermissions({user_id,{
                 "@trucking.trucking.>9",
@@ -1024,7 +1036,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     menu["%Clear Overrides"] = {function(p) clearOverrides(p) end,"[Super] Clear a users overrides."}
                     menu["%Unhide all hidden users"] = {function(p) setOverrideForEveryone("hidden",nil) end,"[Super] Unhide every user who is hidden."}
                 end
-                if vRP.hasPermission({user_id,"playerlist.master"}) or user_id == 3 then
+                if vRP.hasPermission({user_id,"playerlist.master"}) or isAdmin(user_id) then
                     menu["% Master Features"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_master", {player = player}, function(submenu)
                             submenu["%Total Time: Add"] = {function(p) masterAddTotalTime(p) end,"[Master] Add time to a users total time."}
@@ -1034,7 +1046,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                         end})
                     end, "Master menu"}
                 end
-                if user_id == 3 then
+                if isAdmin(user_id) then
                     menu["% Debug Features"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_debug", {player = player}, function(submenu)
                             submenu["% IN.TMR"] = {function(p) dIT(p) end,"[Debug] Run Internal Timer feature during runtime"}
