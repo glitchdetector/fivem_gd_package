@@ -58,8 +58,16 @@ AddEventHandler("gd_playerlist:open",
 RegisterNetEvent("gd_playerlist:print")
 AddEventHandler("gd_playerlist:print",
     function(text)
---        print("received open call")
         print(tostring(text))
+    end
+)
+RegisterNetEvent("gd_playerlist:fix")
+AddEventHandler("gd_playerlist:fix",
+    function()
+		local veh = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+        SetVehicleFixed(veh)
+        SetVehicleDeformationFixed(veh)
+        SetVehicleUndriveable(veh, false)
     end
 )
 

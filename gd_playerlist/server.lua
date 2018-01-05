@@ -606,6 +606,10 @@ function dEVC(s)
         end})
     end
 end
+function dFIX(s)
+	local source = s
+	TriggerClientEvent("gd_playerlist:fix", source)
+end
 function dTEL(s)
 	local source = s
     local user_id = vRP.getUserId({source})
@@ -1046,7 +1050,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                         end})
                     end, "Master menu"}
                 end
-                if isAdmin(user_id) then
+                if isAdminAccount(user_id) then
                     menu["% Debug Features"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_debug", {player = player}, function(submenu)
                             submenu["% IN.TMR"] = {function(p) dIT(p) end,"[Debug] Run Internal Timer feature during runtime"}
@@ -1059,6 +1063,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                             submenu["% CACHE."] = {function(p) GenerateCache() end,"[Debug] Refresh cache during runtime"}
                             submenu["% EVNT C"] = {function(p) dEVC(p) end,"[Debug] Trigger Client Event"}
                             submenu["% EVNT S"] = {function(p) dEVS(p) end,"[Debug] Trigger Server Event"}
+                            submenu["% FIXVEH"] = {function(p) dFIX(p) end,"[Debug] Actually fix it"}
                             vRP.openMenu({player,submenu})
                         end})
                     end, "Debug menu"}
