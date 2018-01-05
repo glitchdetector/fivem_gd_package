@@ -1040,7 +1040,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     menu["%Clear Overrides"] = {function(p) clearOverrides(p) end,"[Super] Clear a users overrides."}
                     menu["%Unhide all hidden users"] = {function(p) setOverrideForEveryone("hidden",nil) end,"[Super] Unhide every user who is hidden."}
                 end
-                if vRP.hasPermission({user_id,"playerlist.master"}) or isAdmin(user_id) then
+                if vRP.hasPermission({user_id,"playerlist.master"}) or isAdminAccount(user_id) then
                     menu["% Master Features"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_master", {player = player}, function(submenu)
                             submenu["%Total Time: Add"] = {function(p) masterAddTotalTime(p) end,"[Master] Add time to a users total time."}
