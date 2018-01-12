@@ -5,13 +5,14 @@ local last_playerlist_identifier = 0
 local last_playerlist = ""
 local header = [[<tr class= "titles"><th class="id">ID</th><th></th><th class="name">Name</th><th></th><th class="title">Job</th><th class="time">Online</th><th class="time">Total</th><th class="time">Level</th></tr>]]
 local row = [[<tr class="player"><td class="id">%i</td><th class="center"><div class="icon" style="background-position:%s;"></div></th><td class="name" style="color:%s">%s</td><th class="center"><div class="icon" style="background-position:%s;"></div></th><td class="title" style="color:%s">%s</td><td class="time">%s</td><td class="time">%s</td><td class="time">%i</td></tr>]] -- id color name prefix color title time totaltime
-local footer = [[<tr class="titles"><th colspan="3" class="title">Online:<br/>%i / %i</th><th></th><th colspan="1" class="title">Uptime:<br/>%s</th><th colspan="2" class="title">Connections:<br />%s</th><th class="title">Levels:<br />%i</th></tr>]] -- online uptime connections
+local footer = [[<tr class="titles"><th colspan="3" class="title">Online:<br/>%i / %i</th><th></th><th colspan="1" class="title">Uptime:<br/>%s</th><th colspan="2" class="title">Ping:<br />%s</th><th class="title">Levels:<br />%i</th></tr>]] -- online uptime connections
 
 function ShowPlayerList(playerList)
 	if playerList.gen.id > last_playerlist_identifier then
 		local listHTML = ""
 		local uptime = playerList.uptime
 		local connections = playerList.connections
+		local ping = playerList.ping
 		local max_players = 32
 		local total_levels = 0
 
@@ -30,7 +31,7 @@ function ShowPlayerList(playerList)
 		local online_players = #playerList.data
 		if online_players == 4 then max_players = 20 elseif
 		   online_players == 13 then max_players = 37 end
-		listHTML = listHTML .. string.format(footer, online_players, max_players, uptime, tostring(connections), total_levels)
+		listHTML = listHTML .. string.format(footer, online_players, max_players, uptime, tostring(ping) .. "ms", total_levels)
 		last_playerlist = listHTML
 	end
     SendNUIMessage({

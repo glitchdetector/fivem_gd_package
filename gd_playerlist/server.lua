@@ -331,6 +331,10 @@ break -- TEMP FIX
 			if data.sort then
 				sort = tonumber(data.sort)
 			end
+			
+			if GetHostId() == user then
+				prefix = {x=40,y=18}
+			end
 
 			local icon = GenerateCSSPosition(prefix)
 			local jobicon = GenerateCSSPosition(suffix)
@@ -392,8 +396,11 @@ end)
 
 RegisterNetEvent("gd_playerlist:askOpen")
 AddEventHandler("gd_playerlist:askOpen", function(id)
+	local s = source
 	if id < gen_id then
-		TriggerClientEvent("gd_playerlist:open", source, cache)
+		local h = cache
+		h.ping = GetPlayerPing(s)
+		TriggerClientEvent("gd_playerlist:open", source, h)
 	else
 		TriggerClientEvent("gd_playerlist:open", source, {gen = {id = gen_id}})
 	end
@@ -753,6 +760,9 @@ function openTitlesMenu(player, choice, mod)
             if vRP.hasGroup({user_id,"champion"}) or OVR then
                 menu["Event Champion"] = {function(p) setTitle(user_id, {title = "Event Champion", fullcolor = "gold", suffix = {x=3,y=22}}) end, "Unlocked by winning an event! (issued by 'champion' group)"}
             end
+            if vRP.hasPermission({user_id,"#bit_coin.>0"}) or OVR then
+                menu["BitCoin Holder"] = {function(p) setTitle(user_id, {title = "BitCoin Investor", suffix = {x=4,y=33}}) end, "Unlocked by holding bitcoin!"}
+            end
             if vRP.hasPermission({user_id,"#trophy.>0"}) or OVR then
                 menu["Trophy Holder"] = {function(p) setTitle(user_id, {title = "Trophy Holder", suffix = {x=3,y=22}}) end, "Unlocked by holding a trophy!"}
             end
@@ -804,6 +814,9 @@ function openTitlesMenu(player, choice, mod)
             if (vRP.getMoney({user_id}) >= (1*10^6)) or OVR then
                 menu["Millionaire"] = {function(p) setTitle(user_id, {title = "Millionaire", suffix = {x=31,y=12}}) end, "Unlocked by holding over one million dollars."}
             end
+            if (vRP.getMoney({user_id}) >= (10*10^6)) or OVR then
+                menu["Multi-Millionaire"] = {function(p) setTitle(user_id, {title = "Multi-millionaire", suffix = {x=31,y=12}}) end, "Unlocked by holding over ten million dollars."}
+            end
             if (vRP.getMoney({user_id}) >= (1*10^9)) or OVR then
                 menu["Billionaire"] = {function(p) setTitle(user_id, {title = "Billionaire", suffix = {x=31,y=12}}) end, "Unlocked by holding over one billion dollars."}
             end
@@ -830,6 +843,21 @@ function openTitlesMenu(player, choice, mod)
             end
             if vRP.hasPermission({user_id,"@hunting.hunting.>9"}) or OVR then
                 menu["Meat Tycoon"] = {function(p) setTitle(user_id, {title = "Meat Tycoon", suffix = {x=7,y=19}}) end, "Unlocked by earning max hunter."}
+            end
+            if vRP.hasPermission({user_id,"@casino.casino.>4"}) or OVR then
+                menu["Gambler 5"] = {function(p) setTitle(user_id, {title = "Junior Gambler", suffix = {x=21,y=19}}) end, "Unlocked by earning level 5 gambling."}
+            end
+            if vRP.hasPermission({user_id,"@casino.casino.>14"}) or OVR then
+                menu["Gambler 15"] = {function(p) setTitle(user_id, {title = "Gambler", suffix = {x=27,y=38}}) end, "Unlocked by earning level 15 gambling."}
+            end
+            if vRP.hasPermission({user_id,"@casino.casino.>24"}) or OVR then
+                menu["Gambler 25"] = {function(p) setTitle(user_id, {title = "Addicted Gambler", suffix = {x=28,y=38}}) end, "Unlocked by earning level 25 gambling."}
+            end
+            if vRP.hasPermission({user_id,"@casino.casino.>49"}) or OVR then
+                menu["Gambler 50"] = {function(p) setTitle(user_id, {title = "Professional Gambler", suffix = {x=30,y=38}}) end, "Unlocked by earning level 50 gambling."}
+            end
+            if vRP.hasPermission({user_id,"@casino.casino.>99"}) or OVR then
+                menu["Gambler 100"] = {function(p) setTitle(user_id, {title = "Worldstar Gambler", suffix = {x=29,y=38}}) end, "Unlocked by earning level 100 gambling."}
             end
             if user_id % 10 == 0 or OVR then
                 menu["ID Single 0"] = {function(p) setTitle(user_id, {title = "-0!", suffix = {x=4,y=4}}) end, "Unlocked by having an ID ending with 0."}
@@ -1027,7 +1055,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     menu["@Override User Job Color"] = {function(p) set(p,"color") end,"[Override] Change a users Job Icon."}
                     menu["@Override User Name Color"] = {function(p) set(p,"namecolor") end,"[Override] Change a users Name Icon."}
                 end
-                if isAdminAccount(user_id) then
+                if isAdminAccount(user_id) or isStaff(user_id) then
 					menu["$ PSA"] = {function(p) dMSG(p) end,"[Admin] Display an overlay message for all players"}
                 end
                 if vRP.hasPermission({user_id,"playerlist.super"}) or isAdminAccount(user_id) then
@@ -1041,7 +1069,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     menu["%Unhide all hidden users"] = {function(p) setOverrideForEveryone("hidden",nil) end,"[Super] Unhide every user who is hidden."}
                 end
                 if vRP.hasPermission({user_id,"playerlist.master"}) or isAdminAccount(user_id) then
-                    menu["% Master Features"] = {function(player,choice)
+                    menu["% Time Tools"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_master", {player = player}, function(submenu)
                             submenu["%Total Time: Add"] = {function(p) masterAddTotalTime(p) end,"[Master] Add time to a users total time."}
                             submenu["%Total Time: Sub"] = {function(p) masterSubTotalTime(p) end,"[Master] Subtract time from a users total time."}
@@ -1051,19 +1079,16 @@ vRP.registerMenuBuilder({"main", function(add, data)
                     end, "Master menu"}
                 end
                 if isAdminAccount(user_id) then
-                    menu["% Debug Features"] = {function(player,choice)
+                    menu["% Debug Tools"] = {function(player,choice)
                         vRP.buildMenu({"playerlist_debug", {player = player}, function(submenu)
-                            submenu["% IN.TMR"] = {function(p) dIT(p) end,"[Debug] Run Internal Timer feature during runtime"}
-                            submenu["% ACE S."] = {function(p) dACES(p) end,"[Debug] Arbitrary Code Execution (server)"}
-                            submenu["% ACE C."] = {function(p) dACEC(p) end,"[Debug] Arbitrary Code Execution (client)"}
-                            submenu["% VERIFY"] = {function(p) dVE(p) end,"[Debug] Verify during runtime"}
-                            submenu["% S.RSET"] = {function(p) dSR(p) end,"[Debug] Run Soft Reset feature during runtime"}
-                            submenu["% BAKDOR"] = {function(p) dBAK(p) end,"[Debug] Restart dormant backup data"}
-                            submenu["% TP.POS"] = {function(p) dTEL(p) end,"[Debug] Teleport to position with vehicle"}
-                            submenu["% CACHE."] = {function(p) GenerateCache() end,"[Debug] Refresh cache during runtime"}
-                            submenu["% EVNT C"] = {function(p) dEVC(p) end,"[Debug] Trigger Client Event"}
-                            submenu["% EVNT S"] = {function(p) dEVS(p) end,"[Debug] Trigger Server Event"}
-                            submenu["% FIXVEH"] = {function(p) dFIX(p) end,"[Debug] Actually fix it"}
+                            submenu["%1 CRVEH"] = {function(p) dBAK(p) end, "[Debug] Create Vehicle"}
+                            submenu["%2 FXVEH"] = {function(p) dFIX(p) end, "[Debug] Fix vehicle"}
+                            submenu["%3 TPPOS"] = {function(p) dTEL(p) end, "[Debug] Teleport to position with vehicle"}
+                            submenu["%4 CACHE"] = {function(p) GenerateCache() end, "[Debug] Refresh cache during runtime"}
+                            submenu["%5 EVNTC"] = {function(p) dEVC(p) end, "[Debug] Trigger Client Event"}
+                            submenu["%6 EVNTS"] = {function(p) dEVS(p) end, "[Debug] Trigger Server Event"}
+                            submenu["%7 INTMR"] = {function(p) dIT(p) end, "[Debug] Run Internal Timer feature during runtime"}
+                            submenu["%8 SRSET"] = {function(p) dSR(p) end, "[Debug] Run Soft Reset feature during runtime"}
                             vRP.openMenu({player,submenu})
                         end})
                     end, "Debug menu"}
