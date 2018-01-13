@@ -130,6 +130,7 @@ function isStaff(id)
             vRP.hasGroup({id,"support"}) or 
             vRP.hasGroup({id,"mod"}) or 
             vRP.hasGroup({id,"admin"}) or 
+            vRP.hasGroup({id,"senioradmin"}) or 
             vRP.hasGroup({id,"headadmin"}) or 
             vRP.hasGroup({id,"superadmin"}))
 end
