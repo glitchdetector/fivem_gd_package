@@ -149,6 +149,44 @@ vRP.registerMenuBuilder({"main", function(add, data)
 						menu["{Fire from company} SAL"] = {function(p) tryFire(p,"4") end,"Fire a person from the company"}
 						isCEO = true
 					end
+					if vRP.hasPermission({user_id,"corp5.ceo"}) then
+						menu["(C5?)"] = {function(p) end,"You're the CEO of CORP5!"}
+						menu["{Fire from company} C5?"] = {function(p) tryFire(p,"5") end,"Fire a person from the company"}
+						isCEO = true
+					end
+					if vRP.hasPermission({user_id,"corp6.ceo"}) then
+						menu["(Imperial Airlines)"] = {function(p) end,"You're the CEO of Imperial Airlines"}
+						menu["IA Grandmoff"] = {function(p) tryGive(p,"corp6.imperial.grandmoff") end,"Hire a person as Grandmoff"}
+						menu["IA Fleet Admiral"] = {function(p) tryGive(p,"corp6.imperial.fleetadmiral") end,"Hire a person as Fleet Admiral"}
+						menu["IA Seasoned Pilot"] = {function(p) tryGive(p,"corp6.imperial.seasonedpilot") end,"Hire a person as Seasoned Pilot"}
+						menu["IA Pilot"] = {function(p) tryGive(p,"corp6.imperial.pilot") end,"Hire a person as Pilot"}
+						menu["{Fire from company} IA"] = {function(p) tryFire(p,"6") end,"Fire a person from the company"}
+						isCEO = true
+					end
+					if vRP.hasPermission({user_id,"corp7.ceo"}) then
+						menu["(WT&R)"] = {function(p) end,"You're the CEO of Wrangler's Towing & Repair!"}
+						menu["WT&R Master Mechanic"] = {function(p) tryGive(p,"corp7.towrepair.mastermechanic") end,"Hire a person as Master Mechanic"}
+						menu["WT&R Towtruck Driver"] = {function(p) tryGive(p,"corp7.towrepair.towtruckdriver") end,"Hire a person as Towtruck Driver"}
+						menu["WT&R Driver"] = {function(p) tryGive(p,"corp7.towrepair.driver") end,"Hire a person as Driver"}
+						menu["WT&R Trainee"] = {function(p) tryGive(p,"corp7.towrepair.training") end,"Hire a person as Trainee"}
+						menu["{Fire from company} WT&R"] = {function(p) tryFire(p,"7") end,"Fire a person from the company"}
+						isCEO = true
+					end
+					if vRP.hasPermission({user_id,"corp8.ceo"}) then
+						menu["(C8?)"] = {function(p) end,"You're the CEO of CORP8!"}
+						menu["{Fire from company} C8?"] = {function(p) tryFire(p,"8") end,"Fire a person from the company"}
+						isCEO = true
+					end
+					if vRP.hasPermission({user_id,"corp9.ceo"}) then
+						menu["(C9?)"] = {function(p) end,"You're the CEO of CORP9!"}
+						menu["{Fire from company} C9?"] = {function(p) tryFire(p,"9") end,"Fire a person from the company"}
+						isCEO = true
+					end
+					if vRP.hasPermission({user_id,"corp10.ceo"}) then
+						menu["(C10?)"] = {function(p) end,"You're the CEO of CORP10!"}
+						menu["{Fire from company} C10?"] = {function(p) tryFire(p,"10") end,"Fire a person from the company"}
+						isCEO = true
+					end
 					
 					if not isCEO then
 						if vRP.hasPermission({user_id,"corp1.employee"}) then
@@ -163,7 +201,25 @@ vRP.registerMenuBuilder({"main", function(add, data)
 						if vRP.hasPermission({user_id,"corp4.employee"}) then
 							menu["(SAL)"] = {function(p) end,"You're an employee for SAL!"}
 						end
-						menu["You're not a CEO"] = {function(p) end, ""}
+						if vRP.hasPermission({user_id,"corp5.employee"}) then
+							menu["(C5?)"] = {function(p) end,"You're an employee for CORP5!"}
+						end
+						if vRP.hasPermission({user_id,"corp6.employee"}) then
+							menu["(Imperial Airlines)"] = {function(p) end,"You're an employee for Imperial Airlines!"}
+						end
+						if vRP.hasPermission({user_id,"corp7.employee"}) then
+							menu["(WT&R)"] = {function(p) end,"You're an employee for Wrangler's Towing & Repair!"}
+						end
+						if vRP.hasPermission({user_id,"corp8.employee"}) then
+							menu["(C8?)"] = {function(p) end,"You're an employee for CORP8!"}
+						end
+						if vRP.hasPermission({user_id,"corp9.employee"}) then
+							menu["(C9?)"] = {function(p) end,"You're an employee for CORP9!"}
+						end
+						if vRP.hasPermission({user_id,"corp10.employee"}) then
+							menu["(C10?)"] = {function(p) end,"You're an employee for CORP10!"}
+						end
+						menu["You're not a CEO"] = {function(p) end, "Only the CEO of the company can manage employees."}
 					end
 					
 					vRP.openMenu({player,menu})
