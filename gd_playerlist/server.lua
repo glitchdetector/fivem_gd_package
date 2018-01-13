@@ -1020,6 +1020,44 @@ function openTitlesMenu(player, choice, mod)
             if vRP.hasPermission({user_id,"corp5.pilot"}) or OVR then
                 menu["FedEx Pilot"] = {function(p) setTitle(user_id, {title = "FedEx Pilot", suffix = {x=5,y=41}}) end, ""}
             end
+			-- Imperial Airlines
+            if vRP.hasPermission({user_id,"corp6.ceo"}) or OVR then
+                menu["IA CEO"] = {function(p) setTitle(user_id, {title = "CEO of Imperial Airlines", color = "white", suffix = {x=6,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp6.grandmoff"}) or OVR then
+                menu["IA Grand Moff"] = {function(p) setTitle(user_id, {title = "Grand Moff of Imperial Airlines", color = "white", suffix = {x=6,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp6.fleetadmiral"}) or OVR then
+                menu["IA Fleet Admiral"] = {function(p) setTitle(user_id, {title = "Imperial Airlines Fleet Admiral", color = "white", suffix = {x=6,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp6.seasonedpilot"}) or OVR then
+                menu["IA Seasoned Pilot"] = {function(p) setTitle(user_id, {title = "Imperial Airlines Seasoned Pilot", color = "white", suffix = {x=6,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp6.pilot"}) or OVR then
+                menu["IA Pilot"] = {function(p) setTitle(user_id, {title = "Imperial Airlines Pilot", color = "white", suffix = {x=6,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp6.employee"}) or OVR then
+                menu["IA Employee"] = {function(p) setTitle(user_id, {title = "Imperial Airlines Employee", color = "white", suffix = {x=6,y=41}}) end, ""}
+            end
+			-- Wrangler's Towing & Repair
+            if vRP.hasPermission({user_id,"corp7.ceo"}) or OVR then
+                menu["WT&R CEO"] = {function(p) setTitle(user_id, {title = "CEO of Wrangler's T&R", color = "chocolate", suffix = {x=7,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp7.mastermechanic"}) or OVR then
+                menu["WT&R Master Mechanic"] = {function(p) setTitle(user_id, {title = "Master Mechanic of Wrangler's T&R", color = "chocolate", suffix = {x=7,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp7.towtruckdriver"}) or OVR then
+                menu["WT&R Towtruck Driver"] = {function(p) setTitle(user_id, {title = "Wrangler's T&R Towtruck Driver", color = "chocolate", suffix = {x=7,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp7.driver"}) or OVR then
+                menu["WT&R Driver"] = {function(p) setTitle(user_id, {title = "Wrangler's T&R Driver", color = "chocolate", suffix = {x=7,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp7.training"}) or OVR then
+                menu["WT&R Trainee"] = {function(p) setTitle(user_id, {title = "Wrangler's T&R Trainee", color = "chocolate", suffix = {x=7,y=41}}) end, ""}
+            end
+            if vRP.hasPermission({user_id,"corp7.employee"}) or OVR then
+                menu["WT&R Employee"] = {function(p) setTitle(user_id, {title = "Wrangler's T&R Employee", color = "chocolate", suffix = {x=7,y=41}}) end, ""}
+            end
             vRP.openMenu({player,menu})
         end})
     end
