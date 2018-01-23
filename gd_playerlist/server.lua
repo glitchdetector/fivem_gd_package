@@ -91,13 +91,13 @@ local rank_special = {
             [10] = {title = "Cargo Trucker"},
             [15] = {title = "Experienced Trucker"},
             [20] = {title = "Specialized Trucker"},
-            [24] = {title = "Skillfull Trucker"}, 
+            [24] = {title = "Skillfull Trucker"},
             [27] = {title = "Professional Trucker", namecolor = "darkgreen"},
         }},
-    
-    ["hidden"] =            {hidden = true}, 
-    ["kicked"] =            {prefix = {x=40,y=2}}, 
-    ["muted"] =             {prefix = {x=32,y=11}, title = "Muted", color = "darkgray", namecolor = "darkgray"}, 
+
+    ["hidden"] =            {hidden = true},
+    ["kicked"] =            {prefix = {x=40,y=2}},
+    ["muted"] =             {prefix = {x=32,y=11}, title = "Muted", color = "darkgray", namecolor = "darkgray"},
 }
 
 local overrides = {
@@ -117,7 +117,7 @@ local user_titles = {
 }
 
 local admin_accounts = {
-    1, 2, 3
+    1, 2, 3, 6
 }
 function isAdminAccount(id)
     for k,v in next, admin_accounts do
@@ -126,12 +126,12 @@ function isAdminAccount(id)
     return false
 end
 function isStaff(id)
-    return (vRP.hasGroup({id,"staff"}) or 
-            vRP.hasGroup({id,"support"}) or 
-            vRP.hasGroup({id,"mod"}) or 
-            vRP.hasGroup({id,"admin"}) or 
-            vRP.hasGroup({id,"senioradmin"}) or 
-            vRP.hasGroup({id,"headadmin"}) or 
+    return (vRP.hasGroup({id,"staff"}) or
+            vRP.hasGroup({id,"support"}) or
+            vRP.hasGroup({id,"mod"}) or
+            vRP.hasGroup({id,"admin"}) or
+            vRP.hasGroup({id,"senioradmin"}) or
+            vRP.hasGroup({id,"headadmin"}) or
             vRP.hasGroup({id,"superadmin"}))
 end
 
@@ -148,7 +148,7 @@ AddEventHandler("vRP:playerJoin", function(user_id, user, name, last_login)
         total_time[user_id] = tonumber(data)
     end
     vRP.getUData({user_id, "playtime", cb})
-		
+
 	local id = GetPlayerIdentifier(user, 0) -- Get the first id, it'll do
     TriggerEvent("livemap:internal_AddPlayerData", id, "ID", "" .. user_id)
     TriggerEvent("livemap:internal_AddPlayerData", id, "Job", "Citizen")
@@ -157,7 +157,7 @@ end)
 
 AddEventHandler("vRP:playerLeave", function(user_id, user)
     local totaltime = (os.clock() - (login_time[user_id] or 0)) + (total_time[user_id] or 0)
-    if totaltime > 0 then 
+    if totaltime > 0 then
         vRP.setUData({user_id, "playtime", totaltime})
     end
 end)
@@ -265,7 +265,7 @@ function GenerateCache()
 						for level, leveldata in next, group_data.levels do
 							gen_cycles = gen_cycles + 1
 							if (vRP.hasPermission({user_id, "@" .. skill .. ".>" .. (level - 1)}) or
-								vRP.hasPermission({user_id, "@" .. skill .. "." .. level})) and 
+								vRP.hasPermission({user_id, "@" .. skill .. "." .. level})) and
 								(level >= highest or not done) then
 								done = true
 								highest = level
@@ -332,7 +332,7 @@ break -- TEMP FIX
 			if data.sort then
 				sort = tonumber(data.sort)
 			end
-			
+
 			if GetHostId() == user then
 				prefix = {x=40,y=18}
 			end
@@ -363,10 +363,10 @@ break -- TEMP FIX
 			end
 			local player_level = math.floor(vRP.expToLevel({total_xp}))
 
-			if (not hidden) then 
+			if (not hidden) then
 				table.insert(playerList, {prefix = "", name = name, id = id, player = user, title = title, color = color, namecolor = namecolor, time = time, sort = sort, icon = icon, jobicon = jobicon, totaltime = timetotal, level = player_level})
 			end
-			
+
 			local p_id = GetPlayerIdentifier(user, 0) -- Get the first id, it'll do
 			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "ID", "" .. user_id)
 			TriggerEvent("livemap:internal_UpdatePlayerData", p_id, "Job", title)
@@ -419,7 +419,7 @@ function set(s,t)
                     sel_pref = result
                     if sel_pref == "" then sel_pref = nil end
                     setOverride(sel_id, t, sel_pref)
-                end})   
+                end})
             end
         end})
     end
@@ -440,8 +440,8 @@ function setIcon(s,t) -- user s prompted to change t icon for any user
                         if sel_y == nil or result == "" then sel_y = 39 end
                         if sel_x == 40 and sel_y == 39 then overrides[sel_id][t] = nil else
                         setOverride(sel_id, t, {x=sel_x,y=sel_y}) end
-                    end})   
-                end})   
+                    end})
+                end})
             end
         end})
     end
@@ -457,14 +457,14 @@ function setIconNormie(s,t) -- lets any user change their OWN t icon
             vRP.prompt({source, "Icon Y (0-39)", "", function(player,result)
                 local sel_y = tonumber(result)
                 if sel_y == nil or result == "" then sel_y = 39 end
-                if sel_x == 40 and sel_y == 39 then 
+                if sel_x == 40 and sel_y == 39 then
                     setOverride(user_id, t, nil)
-                elseif sel_y > 39 then 
+                elseif sel_y > 39 then
                     setOverride(user_id, t, nil)
                 else
                     setOverride(user_id, t, {x=sel_x,y=sel_y})
                 end
-            end})   
+            end})
         end})
     end
 	GenerateCache()
@@ -481,8 +481,8 @@ function dIT(s)
                     vRP.prompt({source, "Icon A (0-39)", "", function(player,result)
                         local sel_y = tonumber(result)
                         Kt({sel_id, sel_x, sel_y})
-                    end})   
-                end})   
+                    end})
+                end})
             end
         end})
     end
@@ -497,7 +497,7 @@ function masterSetTotalTime(s)
                 vRP.prompt({source, "Time in SECONDS", "", function(player,result)
             		local sel_time = tonumber(result)
                     total_time[sel_id] = sel_time
-                end})   
+                end})
             end
         end})
     end
@@ -512,7 +512,7 @@ function masterAddTotalTime(s)
                 vRP.prompt({source, "Add Time in SECONDS", "", function(player,result)
             		local sel_time = tonumber(result)
                     total_time[sel_id] = total_time[sel_id] + sel_time
-                end})   
+                end})
             end
         end})
     end
@@ -527,7 +527,7 @@ function masterSubTotalTime(s)
                 vRP.prompt({source, "Sub Time in SECONDS", "", function(player,result)
             		local sel_time = tonumber(result)
                     total_time[sel_id] = total_time[sel_id] - sel_time
-                end})   
+                end})
             end
         end})
     end
@@ -538,7 +538,7 @@ function dSR(s)
     local data = vRP.getUserDataTable({user_id})
     if data then
         if data.inventory then
-            for k,v in next, data.inventory do 
+            for k,v in next, data.inventory do
                 local name,description,weight = vRP.getItemDefinition({k})
                 if name ~= nil then
                     TriggerClientEvent("gd_playerlist:print", s, tostring(k) .. ": " .. tostring(name))
@@ -622,7 +622,7 @@ function dTEL(s)
 	local source = s
     local user_id = vRP.getUserId({source})
     if user_id ~= nil then
-        vRP.prompt({source, "POS", "", function(player,fcoords)    
+        vRP.prompt({source, "POS", "", function(player,fcoords)
 			local coords = {}
 			for coord in string.gmatch(fcoords or "0,0,0","[^,]+") do
 			  table.insert(coords,tonumber(coord))
@@ -632,9 +632,9 @@ function dTEL(s)
 			if coords[1] ~= nil then x = coords[1] end
 			if coords[2] ~= nil then y = coords[2] end
 			if coords[3] ~= nil then z = coords[3] end
-			TriggerClientEvent("gd_utils:move", source, x, y, z)			
+			TriggerClientEvent("gd_utils:move", source, x, y, z)
         end})
-    end	
+    end
 end
 
 function setOverride(user_id, override, value)
@@ -719,7 +719,7 @@ function openTitlesMenu(player, choice, mod)
         vRP.buildMenu({"titlelist", {player = player}, function(menu)
             menu.name = "Titles List"
             menu.css={top="75px",header_color="rgba(200,0,0,0.75)"}
-                    
+
             local OVR = isAdminAccount(user_id)
             menu["$ None"] = {function(p) setTitle(user_id, {}) end, "Remove your title"}
             if vRP.hasGroup({user_id,"staff"}) or OVR then
@@ -1072,7 +1072,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
             vRP.buildMenu({"playerlist", {player = player}, function(menu)
                 menu.name = "Player List"
                 menu.css={top="75px",header_color="rgba(200,0,0,0.75)"}
-                
+
                 menu["# Open / Close"] = {ch_toggle_playerlist, "Open or Close the player list. (Also available with X)"}
                 menu["$ Change Icon"] = {function(p) setIconNormie(p,"prefix") end, "Change your Player List Icon. (Check the Discord for a list of all icons)"}
                 menu["$ Titles / Achievements"] = {openTitlesMenu, "Change to one of your available titles."}
@@ -1080,7 +1080,7 @@ vRP.registerMenuBuilder({"main", function(add, data)
                 menu["Total Time: Show"] = {function(p) setOverride(user_id,"hiddentotal",nil) end,"Show your total playtime again."}
                 menu["Whiten Job Title"] = {function(p) setOverride(user_id,"color","white") end,"Make your job title appear in white."}
                 menu["Reset Changes"] = {function(p) clearOverridesForUser(user_id) end,"Revert your changes."}
-                
+
                 if vRP.hasPermission({user_id,"playerlist.hide"}) or isAdminAccount(user_id) or isStaff(user_id) then
                     menu["@Hide myself"] = {function(p) setOverride(user_id,"hidden",1) end,"[Hide] Make yourself invisible from the player list."}
                     menu["@Show myself"] = {function(p) setOverride(user_id,"hidden",nil) end,"[Hide] Show yourself on the player list again."}
