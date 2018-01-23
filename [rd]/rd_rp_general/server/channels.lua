@@ -38,7 +38,7 @@ Channels.GENERAL = "General"
 
 for k,v in next, Channels do
     RegisterServerEvent("chatChannel:" .. v)
-    log("Registered channel: " .. v)
+    log("Registered channel: " .. v) 
 end
 
 AddEventHandler("chatChannel:" .. Channels.LOUD, function(message, origin)
