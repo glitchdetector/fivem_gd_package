@@ -3,10 +3,6 @@
 ------------------
 
 -- Messages
-startText = "Press ~g~E ~w~to start a ~g~Bus Route ~w~from ~g~%s~w~"
-startTextSpecial = "Press ~g~E ~w~to start an ~g~Express Route ~w~from ~g~%s~w~"
-pickupText = "Press ~g~E ~w~to pick up ~g~%s ~w~from ~g~%s~w~"
-
 promptGoOnDuty = "Press ~g~E ~w~to ~g~start work ~w~as a ~y~Handler"
 promptAttach = "Press ~g~E ~w~to ~y~attach ~w~the container"
 promptDetach = "Press ~g~E ~w~to ~r~detach ~w~the container"
@@ -17,19 +13,9 @@ pickupCargoMessage = "Pick up the ~y~Container ~w~loaded with ~y~%s"
 invalidVehicleText = "You need a ~g~HANDLER ~w~to do this"
 alreadyHaveVehicleText = "You already have a vehicle out"
 alreadyHaveContainerText = "You are already carrying a container"
-
-
-xOutOfY = "~w~[~y~%i~w~/~y~%i~w~]"
-
-vehicleFullMessage = "Your vehicle is ~r~FULL~w~"
-capacityMessage = "Current ~g~%s " .. xOutOfY
-continueMessage = "Continue ~g~%s ~w~route " .. xOutOfY
-
-startRouteMessage = "Complete the ~g~%s ~w~route"
-jobDoneMessage = "Finished ~g~%s ~w~route"
+alreadyOnDutyText = "You are already on duty"
 
 -- Methods
-engineNeedsToBeOff = true
 
 -- Map Blips
 job_blips = {
@@ -69,13 +55,26 @@ cargo_types = {
     {name = "Electronics", value = 0},
     {name = "Hardware", value = 0},
     {name = "Glass", value = 0},
-    {name = "High Pressure Gasses", value = 0},
+    {name = "Pressurized Canisters", value = 0},
     {name = "Tools", value = 0},
+    {name = "Mechanical Parts", value = 0},
+    {name = "Textiles", value = 0},
+    {name = "Merchandise", value = 0},
+    {name = "Narcotics", value = 0},
+    {name = "Figurines", value = 0},
+    {name = "Jewlery", value = 0},
 }
 
 craneName = "frame_2"
 containers = {
     "prop_contr_03b_ld",
+    -- "prop_container_01a",
+    -- "prop_container_01b",
+    -- "prop_container_01c",
+    -- "prop_container_01d",
+    -- "prop_container_01f",
+    -- "prop_container_01g",
+    -- "prop_container_01h",
 }
 
 STATE = "none"
@@ -86,6 +85,7 @@ job_blip_settings = {
     start_blip = {id = 527, color = 17},
     pickup_blip = {id = 537, color = 6},
     destination_blip = {id = 538, color = 6},
+    vehicle_blip = {id = 529, color = 48},
     marker = {r = 0, g = 150, b = 255, a = 200},
     marker_special = {r = 255, g = 255, b = 0, a = 200},
     spawner_blip = {id = 524, color = 17},
@@ -174,8 +174,25 @@ function setBlipName(blip, name)
 end
 
 function startJob()
-    ONDUTY = true
-    STATE = "idle"
+    if not isOnDuty() then
+        ONDUTY = true
+        STATE = "idle"
+        for k,v in next, vehicle_location do
+            local blip = AddBlipForCoord(v.x, v.y, v.z)
+            SetBlipSprite(blip, job_blip_settings.spawner_blip.id)
+            SetBlipColour(blip, job_blip_settings.spawner_blip.color)
+            SetBlipAsShortRange(blip, true)
+            table.insert(current_job.blips, blip)
+        end
+    end
+end
+
+function spawnVehicle(model, x, y, z, h)
+    RequestModel(model)
+    while not HasModelLoaded(model) do Wait(1) end
+    local veh = CreateVehicle(model, x, y, z, h, true, 0)
+    SetPedIntoVehicle(GetPlayerPed(-1), veh, -1)
+    return veh
 end
 
 function createMission()
@@ -191,9 +208,14 @@ function createMission()
     current_job.container = container
     -- Add a blip to the container
     local blip = AddBlipForEntity(container)
+    SetBlipSprite(blip, job_blip_settings.pickup_blip.id)
+    SetBlipColour(blip, job_blip_settings.pickup_blip.color)
+    SetBlipRoute(blip, true)
     current_job.blip = blip
     current_job.pos = location
+    current_job.cargo = cargo_types[math.random(#cargo_types)]
     STATE = "pickup"
+    drawMessage((pickupCargoMessage):format(current_job.cargo.name))
 end
 
 function checkPickup()
@@ -206,13 +228,16 @@ function checkPickup()
             local pos = GetWorldPositionOfEntityBone(veh, bone)
             -- Check if the handler is lined up with the container
             if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
-                drawText("Press E to hook up container")
+                drawText(promptAttach)
                 if isEPressed() then
                     AttachEntityToEntity(current_job.container, veh, bone, 0, 1.78, -2.5, 0, 0, 90.0, false, false, true, false, 0, true)
                     current_job.pos = delivery_locations[math.random(#delivery_locations)]
                     STATE = "deliver"
                     RemoveBlip(current_job.blip)
                     local blip = AddBlipForCoord(current_job.pos.x, current_job.pos.y, current_job.pos.z)
+                    SetBlipSprite(blip, job_blip_settings.destination_blip.id)
+                    SetBlipColour(blip, job_blip_settings.destination_blip.color)
+                    SetBlipRoute(blip, true)
                     current_job.blip = blip
                     return true
                 end
@@ -235,7 +260,7 @@ function checkDeliver()
             local bone = GetEntityBoneIndexByName(veh, craneName)
             local pos = GetWorldPositionOfEntityBone(veh, bone)
             if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
-                drawText("Press E to unload container")
+                drawText(promptDetach)
                 if isEPressed() then
                     DetachEntity(current_job.container, false, true)
                     SetEntityAsNoLongerNeeded(current_job.container)
@@ -253,11 +278,30 @@ end
 
 -- Main loop
 Citizen.CreateThread(function()
+    if true then -- Testing shit
+        local __pos = {name = "interioroutsidexd", x = 1209.253418, y = -3283.602539, z = 29.403765}
+        local __model = "apc"
+        RequestModel(__model)
+        while not HasModelLoaded(__model) do Wait(1) end
+        -- Create the container at the location
+        local __obj = CreateObject(__model, __pos.x, __pos.y, __pos.z, true, 0, true)
+        FreezeEntityPosition(__obj, true)
+    end
+    current_job.blips = {}
+    for k,v in next, job_blips do
+        local blip = AddBlipForCoord(v.x, v.y, v.z)
+        SetBlipSprite(blip, job_blip_settings.start_blip.id)
+        SetBlipColour(blip, job_blip_settings.start_blip.color)
+        setBlipName(blip, v.name)
+        SetBlipAsShortRange(blip, true)
+        table.insert(current_job.blips, blip)
+    end
     while true do
         Wait(3)
         if not isOnDuty() then
             -- not on my boi
             for k,v in next, job_starts do
+                drawMarker(v.x, v.y, v.z, false)
                 if nearMarker(v.x, v.y, v.z) then
                     drawText(promptGoOnDuty)
                     if isEPressed() then
@@ -268,14 +312,36 @@ Citizen.CreateThread(function()
         else
             -- on duty
             for k,v in next, job_starts do
+                drawMarker(v.x, v.y, v.z, true)
                 if nearMarker(v.x, v.y, v.z) then
                     drawText("You are already on duty")
                 end
             end
+            for k,v in next, vehicle_location do
+                drawMarker(v.x, v.y, v.z, true)
+                if nearMarker(v.x, v.y, v.z) then
+                    if current_job.vehicle ~= nil then
+                        drawText("You already have a vehicle out")
+                    else
+                        drawText((promptSpawnVehicle):format(v.name))
+                        if isEPressed() then
+                            local veh = spawnVehicle(v.model, v.x, v.y, v.z, v.h)
+                            local blip = AddBlipForEntity(veh)
+                            SetBlipSprite(blip, job_blip_settings.vehicle_blip.id)
+                            SetBlipColour(blip, job_blip_settings.vehicle_blip.color)
+                            current_job.vehicle = veh
+                        end
+                    end
+                end
+            end
             if STATE == "pickup" then
+                -- Player has container to pick up
+                drawMarker(current_job.pos.x, current_job.pos.y, current_job.pos.z, true)
                 checkPickup()
             end
             if STATE == "deliver" then
+                -- Player is carrying container
+                drawMarker(current_job.pos.x, current_job.pos.y, current_job.pos.z, true)
                 checkDeliver()
             end
         end
@@ -284,9 +350,21 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Wait(1*60*1000) -- One minute timer
+        Wait(1*30*1000) -- 30 second timer
         if isOnDuty() and STATE == "idle" then
             createMission()
         end
+        if current_job.vehicle ~= nil then
+            if not DoesEntityExist(current_job.vehicle) then
+                current_job.vehicle = nil
+            end
+        end
     end
 end)
+
+RegisterCommand("tppos", function(source, args, raw)
+    args[1] = args[1] or 0
+    args[2] = args[2] or 0
+    args[3] = args[3] or 0
+    SetEntityCoords(GetPlayerPed(-1), tonumber(args[1]) + 0.0, tonumber(args[2]) + 0.0, tonumber(args[3]) + 0.0, 0, 0, 0, 0)
+end, false)
