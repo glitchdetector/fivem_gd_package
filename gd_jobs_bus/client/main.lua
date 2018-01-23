@@ -277,7 +277,8 @@ local debugMarkers = {}
 RegisterNetEvent("gd:pos")
 AddEventHandler("gd:pos", function(msg)
     local pos = GetEntityCoords(GetPlayerPed(-1))
-    TriggerServerEvent("gd:pos", msg, {x = pos.x, y = pos.y, z = pos.z - 1})
+	local heading = GetEntityHeading(GetPlayerPed(-1))
+    TriggerServerEvent("gd:pos", msg, {x = pos.x, y = pos.y, z = pos.z - 1, h = heading})
     table.insert(debugMarkers, {name = "debug", x = pos.x, y = pos.y, z = pos.z - 1})
 end)
 
