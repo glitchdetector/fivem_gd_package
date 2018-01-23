@@ -35,24 +35,3 @@ AddEventHandler("gd_jobs_handler:pickupJob", function(fares, payment, tier)
     TriggerClientEvent("chatMessage", source, "^0Received ^2$" .. money .. " ^0from ^3" .. fares .. " fares")
     -- give xp and whatever
 end)
-
-AddEventHandler("chatMessage",function(source,name,msg)
-	if msg:sub(1,4) == "/pos" then
-		TriggerClientEvent("gd:pos",source,msg)
-		CancelEvent()
-	end
-	if msg:sub(1,5) == "/hash" then
-		TriggerClientEvent("gd:hash",source,msg)
-		CancelEvent()
-	end
-end)
-
-RegisterServerEvent("gd:pos")
-AddEventHandler("gd:pos", function(text, pos)
-    local name = text:sub(6)
-    local str = string.format('{name = "%s", x = %f, y = %f, z = %f, h = %f},', name, pos.x, pos.y, pos.z, pos.h)
-    print(str)
-    local file = io.open("markers.dev", "a+")
-    file:write(str .. "\n")
-    file:close()
-end)

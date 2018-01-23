@@ -6,9 +6,18 @@
 startText = "Press ~g~E ~w~to start a ~g~Bus Route ~w~from ~g~%s~w~"
 startTextSpecial = "Press ~g~E ~w~to start an ~g~Express Route ~w~from ~g~%s~w~"
 pickupText = "Press ~g~E ~w~to pick up ~g~%s ~w~from ~g~%s~w~"
-invalidVehicleText = "You need a ~g~BUS ~w~to do this"
-tooLowTierText = "Express routes are reserved for ~g~Coaches ~w~only"
-engineRunningText = "Fully ~r~STOP ~w~before boarding / deboarding"
+
+promptGoOnDuty = "Press ~g~E ~w~to ~g~start work ~w~as a ~y~Handler"
+promptAttach = "Press ~g~E ~w~to ~y~attach ~w~the container"
+promptDetach = "Press ~g~E ~w~to ~r~detach ~w~the container"
+promptSpawnVehicle = "Press ~g~E ~w~to spawn a ~g~%s"
+
+pickupCargoMessage = "Pick up the ~y~Container ~w~loaded with ~y~%s"
+
+invalidVehicleText = "You need a ~g~HANDLER ~w~to do this"
+alreadyHaveVehicleText = "You already have a vehicle out"
+alreadyHaveContainerText = "You are already carrying a container"
+
 
 xOutOfY = "~w~[~y~%i~w~/~y~%i~w~]"
 
@@ -24,7 +33,7 @@ engineNeedsToBeOff = true
 
 -- Map Blips
 job_blips = {
-    {name = "Buccaneer Way", x = 814.853699, y = -2982.555908, z = 5.020655, h = 89.604530},
+    {name = "Handler Office", x = 814.853699, y = -2982.555908, z = 5.020655, h = 89.604530},
 }
 
 container_locations = {
@@ -43,8 +52,9 @@ container_locations = {
     {name = "Buccaneer Way", x = 1178.159058, y = -3115.132568, z = 5.028012, h = 266.052917},
     {name = "Buccaneer Way", x = 1178.249512, y = -3123.141113, z = 7.844794, h = 272.971069},
 }
+
 vehicle_location = {
-    {name = "Buccaneer Way", x = 809.624695, y = -3038.202881, z = 4.742123, h = 178.457520},
+    {name = "Handler", model = "HANDLER", x = 809.624695, y = -3038.202881, z = 4.742123, h = 178.457520},
 }
 
 delivery_locations = {
@@ -55,19 +65,30 @@ delivery_locations = {
     {name = "Buccaneer Way", x = 1274.214844, y = -3165.242188, z = 6.528419, h = 2.131284},
 }
 
+cargo_types = {
+    {name = "Electronics", value = 0},
+    {name = "Hardware", value = 0},
+    {name = "Glass", value = 0},
+    {name = "High Pressure Gasses", value = 0},
+    {name = "Tools", value = 0},
+}
+
 craneName = "frame_2"
 containers = {
     "prop_contr_03b_ld",
 }
+
 STATE = "none"
 ONDUTY = false
 
 -- Blip Settings
 job_blip_settings = {
-    start_blip = {id = 513, color = 38},
-    destination_blip = {id = 420, color = 4},
+    start_blip = {id = 527, color = 17},
+    pickup_blip = {id = 537, color = 6},
+    destination_blip = {id = 538, color = 6},
     marker = {r = 0, g = 150, b = 255, a = 200},
     marker_special = {r = 255, g = 255, b = 0, a = 200},
+    spawner_blip = {id = 524, color = 17},
 }
 
 -- Job Start markers
@@ -84,6 +105,19 @@ job_vehicles = {
 ----------------
 
 local debugMarkers = {}
+
+function isInValidVehicle()
+    local ped = GetPlayerPed(-1)
+    local veh = GetVehiclePedIsIn(ped, false)
+    if not veh then return false end
+    local model = GetEntityModel(veh)
+    for k,v in next, job_vehicles do
+        if model == GetHashKey(v.name) then
+            return true
+        end
+    end
+    return false
+end
 
 function drawText(text)
     Citizen.InvokeNative(0xB87A37EEB7FAA67D,"STRING")
@@ -112,7 +146,7 @@ AddEventHandler("gd_jobs_handler:startJob",
 
 RegisterNetEvent("stopjob")
 AddEventHandler("stopjob", function()
-        cancelJob()
+    cancelJob()
 end)
 
 function isOnDuty()
@@ -145,35 +179,46 @@ function startJob()
 end
 
 function createMission()
+    -- Get position for next container mission
     local location = container_locations[math.random(#container_locations)]
-    local model = containers[1]
+    -- Load the model
+    local model = containers[math.random(#containers)]
     RequestModel(model)
     while not HasModelLoaded(model) do Wait(1) end
+    -- Create the container at the location
     local container = CreateObject(model, location.x, location.y, location.z, true, 0, true)
     SetEntityHeading(container, location.h + 90.0)
     current_job.container = container
+    -- Add a blip to the container
     local blip = AddBlipForEntity(container)
     current_job.blip = blip
     current_job.pos = location
+    STATE = "pickup"
 end
 
 function checkPickup()
+    -- Check if container was removed (fucking gta being a cunt)
     if DoesEntityExist(current_job.container) then
-        local ped = GetPlayerPed(-1)
-        local veh = GetVehiclePedIsIn(ped, false)
-        local bone = GetEntityBoneIndexByName(veh, craneName)
-        local pos = GetWorldPositionOfEntityBone(veh, bone)
-        if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
-            drawText("Press E to hook up container")
-            if isEPressed() then
-                AttachEntityToEntity(current_job.container, veh, bone, 0, 1.78, -2.5, 0, 0, 90.0, false, false, true, false, 0, true)
-                current_job.pos = delivery_locations[math.random(#delivery_locations)]
-                STATE = "deliver"
-                RemoveBlip(current_job.blip)
-                local blip = AddBlipForCoord(current_job.pos.x, current_job.pos.y, current_job.pos.z)
-                current_job.blip = blip
-                return true
+        if isInValidVehicle() then
+            local ped = GetPlayerPed(-1)
+            local veh = GetVehiclePedIsIn(ped, false)
+            local bone = GetEntityBoneIndexByName(veh, craneName)
+            local pos = GetWorldPositionOfEntityBone(veh, bone)
+            -- Check if the handler is lined up with the container
+            if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
+                drawText("Press E to hook up container")
+                if isEPressed() then
+                    AttachEntityToEntity(current_job.container, veh, bone, 0, 1.78, -2.5, 0, 0, 90.0, false, false, true, false, 0, true)
+                    current_job.pos = delivery_locations[math.random(#delivery_locations)]
+                    STATE = "deliver"
+                    RemoveBlip(current_job.blip)
+                    local blip = AddBlipForCoord(current_job.pos.x, current_job.pos.y, current_job.pos.z)
+                    current_job.blip = blip
+                    return true
+                end
             end
+        else
+            -- You need to be in a handler to do this
         end
         return false
     else
@@ -184,18 +229,22 @@ end
 
 function checkDeliver()
     if DoesEntityExist(current_job.container) then
-        local ped = GetPlayerPed(-1)
-        local veh = GetVehiclePedIsIn(ped, false)
-        local bone = GetEntityBoneIndexByName(veh, craneName)
-        local pos = GetWorldPositionOfEntityBone(veh, bone)
-        if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
-            drawText("Press E to unload container")
-            if isEPressed() then
-                DetachEntity(current_job.container, false, true)
-                SetEntityAsNoLongerNeeded(current_job.container)
-                STATE = "idle"
-                RemoveBlip(current_job.blip)
+        if isInValidVehicle() then
+            local ped = GetPlayerPed(-1)
+            local veh = GetVehiclePedIsIn(ped, false)
+            local bone = GetEntityBoneIndexByName(veh, craneName)
+            local pos = GetWorldPositionOfEntityBone(veh, bone)
+            if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
+                drawText("Press E to unload container")
+                if isEPressed() then
+                    DetachEntity(current_job.container, false, true)
+                    SetEntityAsNoLongerNeeded(current_job.container)
+                    STATE = "idle"
+                    RemoveBlip(current_job.blip)
+                end
             end
+        else
+            -- You need to be in a handler to do this
         end
     else
         STATE = "idle"
@@ -210,7 +259,7 @@ Citizen.CreateThread(function()
             -- not on my boi
             for k,v in next, job_starts do
                 if nearMarker(v.x, v.y, v.z) then
-                    drawText("Go on duty (E)")
+                    drawText(promptGoOnDuty)
                     if isEPressed() then
                         TriggerServerEvent("gd_jobs_handler:tryStartJob")
                     end
@@ -223,17 +272,21 @@ Citizen.CreateThread(function()
                     drawText("You are already on duty")
                 end
             end
-
-            if STATE == "idle" then
-                createMission()
-                STATE = "pickup"
-            end
             if STATE == "pickup" then
                 checkPickup()
             end
             if STATE == "deliver" then
                 checkDeliver()
             end
+        end
+    end
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Wait(1*60*1000) -- One minute timer
+        if isOnDuty() and STATE == "idle" then
+            createMission()
         end
     end
 end)
