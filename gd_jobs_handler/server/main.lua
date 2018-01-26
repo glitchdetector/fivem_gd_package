@@ -13,13 +13,13 @@ AddEventHandler("gd_jobs_handler:tryStartJob", function(location, tier)
 end)
 
 RegisterServerEvent("gd_jobs_handler:finishJob")
-AddEventHandler("gd_jobs_handler:finishJob", function(total_fares, payment, tier)
+AddEventHandler("gd_jobs_handler:finishJob", function(payment)
      -- Give bonus money based on distance
     -- distance: length of entire job
     -- payment: cargo value multiplier
     -- tier: job tier
-    local pay = (150 * payment) * tier
-    local money = math.floor((total_fares * pay) / 10)
+    local pay = payment
+    local money = payment * 1
     TriggerClientEvent("chatMessage", source, "Bonus ^2$" .. money .. " ^0from ^3" .. total_fares .. " fares")
     -- give xp and whatever
 end)

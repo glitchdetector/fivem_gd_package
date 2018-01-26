@@ -8,7 +8,11 @@ promptAttach = "Press ~g~E ~w~to ~y~attach ~w~the container"
 promptDetach = "Press ~g~E ~w~to ~r~detach ~w~the container"
 promptSpawnVehicle = "Press ~g~E ~w~to spawn a ~g~%s"
 
-pickupCargoMessage = "Pick up the ~y~Container ~w~loaded with ~y~%s"
+pickupCargoMessage = "Pick up the ~y~Container ~w~loaded with ~y~%s ~w~from ~y~%s"
+relocateCargoMessage = "Re-locate the ~y~%s ~w~to the designated area ~y~%s"
+deliverCargoMessage = "Load the ~y~%s ~w~on-to the transport waiting at ~y~%s"
+droppedCargoMessage = "You've dropped and damaged the cargo"
+lostCargoMessage = "The cargo has gone missing"
 
 invalidVehicleText = "You need a ~g~HANDLER ~w~to do this"
 alreadyHaveVehicleText = "You already have a vehicle out"
@@ -44,11 +48,22 @@ vehicle_location = {
 }
 
 delivery_locations = {
-    {name = "Buccaneer Way", x = 957.399536, y = -3248.678955, z = 8.089097, h = 179.588242},
-    {name = "Buccaneer Way", x = 1034.831421, y = -3248.533936, z = 8.093677, h = 177.612244},
-    {name = "Buccaneer Way", x = 1273.775757, y = -3107.020264, z = 6.486442, h = 177.193726},
-    {name = "Buccaneer Way", x = 865.434265, y = -2970.729492, z = 6.481098, h = 357.733124},
-    {name = "Buccaneer Way", x = 1274.214844, y = -3165.242188, z = 6.528419, h = 2.131284},
+    -- {name = "Buccaneer Way", x = 957.399536, y = -3248.678955, z = 8.089097, h = 179.588242},
+    -- {name = "Buccaneer Way", x = 1034.831421, y = -3248.533936, z = 8.093677, h = 177.612244},
+    -- {name = "Buccaneer Way", x = 1273.775757, y = -3107.020264, z = 6.486442, h = 177.193726},
+    -- {name = "Buccaneer Way", x = 865.434265, y = -2970.729492, z = 6.481098, h = 357.733124},
+    -- {name = "Buccaneer Way", x = 1274.214844, y = -3165.242188, z = 6.528419, h = 2.131284},
+    {name = "M 16", x = 953.238342, y = -3185.854492, z = 4.900803, h = 354.982040},
+    {name = "M 04", x = 904.741516, y = -3186.008301, z = 4.897816, h = 0.032934},
+    {name = "I 05", x = 909.055969, y = -3130.022461, z = 4.900803, h = 356.268768},
+    {name = "P 16", x = 1050.251953, y = -3208.714600, z = 4.896801, h = 178.482513},
+    {name = "P 04", x = 1001.490479, y = -3209.035889, z = 4.901496, h = 174.979141},
+    {name = "O 10", x = 929.132874, y = -3210.211914, z = 4.900663, h = 176.289825},
+    {name = "N 09", x = 1021.755859, y = -3183.300781, z = 4.900906, h = 358.934662},
+    {name = "N 18", x = 1058.591064, y = -3184.711914, z = 4.901557, h = 357.888519},
+    {name = "I 17", x = 957.072571, y = -3131.683838, z = 4.900802, h = 354.737244},
+    {name = "K 16", x = 953.795349, y = -3153.900879, z = 4.900801, h = 177.376953},
+    {name = "K 04", x = 904.295593, y = -3154.360352, z = 4.900803, h = 175.846771},
 }
 
 cargo_types = {
@@ -63,6 +78,10 @@ cargo_types = {
     {name = "Narcotics", value = 0},
     {name = "Figurines", value = 0},
     {name = "Jewlery", value = 0},
+    {name = "Food Items", value = 0},
+    {name = "Construction Materials", value = 0},
+    {name = "Medical Equipment", value = 0},
+    {name = "Video Games", value = 0},
 }
 
 craneName = "frame_2"
@@ -173,6 +192,7 @@ function setBlipName(blip, name)
     EndTextCommandSetBlipName(blip)
 end
 
+--
 function startJob()
     if not isOnDuty() then
         ONDUTY = true
@@ -187,9 +207,15 @@ function startJob()
     end
 end
 
-function spawnVehicle(model, x, y, z, h)
+-- Does the requesting and the load wait in one handy function
+function requestModel(model)
     RequestModel(model)
     while not HasModelLoaded(model) do Wait(1) end
+end
+
+-- Spawns a vehicle and puts the player in it
+function spawnVehicle(model, x, y, z, h)
+    requestModel(model)
     local veh = CreateVehicle(model, x, y, z, h, true, 0)
     SetPedIntoVehicle(GetPlayerPed(-1), veh, -1)
     return veh
@@ -200,8 +226,7 @@ function createMission()
     local location = container_locations[math.random(#container_locations)]
     -- Load the model
     local model = containers[math.random(#containers)]
-    RequestModel(model)
-    while not HasModelLoaded(model) do Wait(1) end
+    requestModel(model)
     -- Create the container at the location
     local container = CreateObject(model, location.x, location.y, location.z, true, 0, true)
     SetEntityHeading(container, location.h + 90.0)
@@ -211,11 +236,37 @@ function createMission()
     SetBlipSprite(blip, job_blip_settings.pickup_blip.id)
     SetBlipColour(blip, job_blip_settings.pickup_blip.color)
     SetBlipRoute(blip, true)
+    -- Store the data for the current job
     current_job.blip = blip
     current_job.pos = location
+    -- Get a random cargo name (vanity)
     current_job.cargo = cargo_types[math.random(#cargo_types)]
+    -- Set new state
     STATE = "pickup"
-    drawMessage((pickupCargoMessage):format(current_job.cargo.name))
+    -- Tell the player to pick up the spawned container
+    drawMessage((pickupCargoMessage):format(current_job.cargo.name, location.name))
+end
+
+function generateLeavingTruck(location)
+    requestModel("hauler")
+    requestModel("trflat")
+    requestModel("s_m_m_dockwork_01")
+    local trailer = CreateVehicle("trflat", location.x, location.y, location.z, location.h, true, false)
+    local cab = CreateVehicle("hauler", location.x + GetEntityForwardX(trailer) * 6.0, location.y + GetEntityForwardY(trailer) * 6.0, location.z, location.h, true, false)
+    AttachVehicleToTrailer(cab, trailer, 10.0)
+    local driver = CreatePedInsideVehicle(cab, 26, "s_m_m_dockwork_01", -1, true, false)
+    current_job.truck_cab = cab
+    current_job.truck_trailer = trailer
+    current_job.truck_driver = driver
+end
+
+function clearJob()
+    RemoveBlip(current_job.blip)
+    SetEntityAsNoLongerNeeded(current_job.container)
+    SetEntityAsNoLongerNeeded(current_job.truck_cab)
+    SetEntityAsNoLongerNeeded(current_job.truck_trailer)
+    SetEntityAsNoLongerNeeded(current_job.truck_driver)
+    STATE = "idle"
 end
 
 function checkPickup()
@@ -239,6 +290,8 @@ function checkPickup()
                     SetBlipColour(blip, job_blip_settings.destination_blip.color)
                     SetBlipRoute(blip, true)
                     current_job.blip = blip
+                    drawMessage((deliverCargoMessage):format(current_job.cargo.name, current_job.pos.name))
+                    generateLeavingTruck(current_job.pos)
                     return true
                 end
             end
@@ -247,32 +300,58 @@ function checkPickup()
         end
         return false
     else
-        STATE = "idle"
+        clearJob()
         return false
     end
 end
 
 function checkDeliver()
     if DoesEntityExist(current_job.container) then
-        if isInValidVehicle() then
-            local ped = GetPlayerPed(-1)
-            local veh = GetVehiclePedIsIn(ped, false)
-            local bone = GetEntityBoneIndexByName(veh, craneName)
-            local pos = GetWorldPositionOfEntityBone(veh, bone)
-            if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
-                drawText(promptDetach)
-                if isEPressed() then
-                    DetachEntity(current_job.container, false, true)
-                    SetEntityAsNoLongerNeeded(current_job.container)
-                    STATE = "idle"
-                    RemoveBlip(current_job.blip)
-                end
-            end
+        if not IsEntityAttached(current_job.container) then
+            drawMessage(droppedCargoMessage)
+            clearJob()
         else
-            -- You need to be in a handler to do this
+            if isInValidVehicle() then
+                local ped = GetPlayerPed(-1)
+                local veh = GetVehiclePedIsIn(ped, false)
+                local bone = GetEntityBoneIndexByName(veh, craneName)
+                local pos = GetWorldPositionOfEntityBone(veh, bone)
+                if GetDistanceBetweenCoords(pos.x, pos.y, pos.z, current_job.pos.x, current_job.pos.y, current_job.pos.z, true) < 5.0 then
+                    drawText(promptDetach)
+                    if isEPressed() then
+                        DetachEntity(current_job.container, false, true)
+                        AttachEntityToEntity(current_job.container, current_job.truck_trailer, 0, 0.0, 0.0, 0.35, 0.0, 0.0, 0.0, 0, false, true, false, 0, true)
+                        TaskVehicleDriveWander(current_job.truck_driver, current_job.truck_cab, 40.0, 786468)
+                        clearJob()
+                    end
+                end
+            else
+                -- You need to be in a handler to do this
+            end
         end
     else
-        STATE = "idle"
+        drawMessage(lostCargoMessage)
+        clearJob()
+    end
+end
+
+function checkVehicleSpawns()
+    for k,v in next, vehicle_location do
+        drawMarker(v.x, v.y, v.z, true)
+        if nearMarker(v.x, v.y, v.z) then
+            if current_job.vehicle ~= nil then
+                drawText(alreadyHaveVehicleText)
+            else
+                drawText((promptSpawnVehicle):format(v.name))
+                if isEPressed() then
+                    local veh = spawnVehicle(v.model, v.x, v.y, v.z, v.h)
+                    local blip = AddBlipForEntity(veh)
+                    SetBlipSprite(blip, job_blip_settings.vehicle_blip.id)
+                    SetBlipColour(blip, job_blip_settings.vehicle_blip.color)
+                    current_job.vehicle = veh
+                end
+            end
+        end
     end
 end
 
@@ -281,8 +360,7 @@ Citizen.CreateThread(function()
     if true then -- Testing shit
         local __pos = {name = "interioroutsidexd", x = 1209.253418, y = -3283.602539, z = 29.403765}
         local __model = "apc"
-        RequestModel(__model)
-        while not HasModelLoaded(__model) do Wait(1) end
+        requestModel(__model)
         -- Create the container at the location
         local __obj = CreateObject(__model, __pos.x, __pos.y, __pos.z, true, 0, true)
         FreezeEntityPosition(__obj, true)
@@ -314,26 +392,10 @@ Citizen.CreateThread(function()
             for k,v in next, job_starts do
                 drawMarker(v.x, v.y, v.z, true)
                 if nearMarker(v.x, v.y, v.z) then
-                    drawText("You are already on duty")
+                    drawText(alreadyOnDutyText)
                 end
             end
-            for k,v in next, vehicle_location do
-                drawMarker(v.x, v.y, v.z, true)
-                if nearMarker(v.x, v.y, v.z) then
-                    if current_job.vehicle ~= nil then
-                        drawText("You already have a vehicle out")
-                    else
-                        drawText((promptSpawnVehicle):format(v.name))
-                        if isEPressed() then
-                            local veh = spawnVehicle(v.model, v.x, v.y, v.z, v.h)
-                            local blip = AddBlipForEntity(veh)
-                            SetBlipSprite(blip, job_blip_settings.vehicle_blip.id)
-                            SetBlipColour(blip, job_blip_settings.vehicle_blip.color)
-                            current_job.vehicle = veh
-                        end
-                    end
-                end
-            end
+            checkVehicleSpawns()
             if STATE == "pickup" then
                 -- Player has container to pick up
                 drawMarker(current_job.pos.x, current_job.pos.y, current_job.pos.z, true)
@@ -368,3 +430,59 @@ RegisterCommand("tppos", function(source, args, raw)
     args[3] = args[3] or 0
     SetEntityCoords(GetPlayerPed(-1), tonumber(args[1]) + 0.0, tonumber(args[2]) + 0.0, tonumber(args[3]) + 0.0, 0, 0, 0, 0)
 end, false)
+
+RegisterCommand("roadtrain", function(source, args, raw)
+    requestModel("phantom3")
+    requestModel("trailers2")
+    local ped = GetPlayerPed(-1)
+    local pos = GetEntityCoords(ped)
+    local fvx = GetEntityForwardX(ped)
+    local fvy = GetEntityForwardY(ped)
+    local h = GetEntityHeading(ped)
+    local cab = spawnVehicle("phantom3", pos.x, pos.y, pos.z, h)
+    local dist = 14.0
+    local trailer = CreateVehicle("trailers2", pos.x - fvx * dist, pos.y - fvy * dist, pos.z, h, true, 0)
+    SetEntityInvincible(newTrailer, true)
+    AttachVehicleToTrailer(cab, trailer, 10.0)
+    for i=2,5 do
+        local newTrailer = CreateVehicle("trailers2", pos.x - fvx * (dist*i), pos.y - fvy * (dist*i), pos.z, h, true, 0)
+        local rope = AddRope(pos.x, pos.y, pos.z, 0.0, 0.0, 0.0, --[[<- pos & rot]] 10.0, 4, 10.0, 1.0, 0, false, false, true, 0, false, 0)
+        AttachEntitiesToRope(rope, newTrailer, trailer, 0.0, 7.0, 1.0, 0.0, -7.0, 1.0, 1.0, true, true)
+        SetEntityInvincible(newTrailer, true)
+        --AttachEntityToEntityPhysically(newTrailer, trailer, 0, 0, 0.0, 2.5, 0.0, 0.0, -2.5, 0.0, 0.0, 0.0, 0.0, 90000.0, false, 0, false, 1, 2)
+        --AttachEntityToEntityPhysically(newTrailer, trailer, 0, 0, 0.0, 0.0, 2.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 90000.0, false, 0, false, 1, 2)
+        --AttachEntityToEntity(entity1, entity2, boneIndex, xPos, yPos, zPos, xRot, yRot, zRot, p9, useSoftPinning, collision, isPed, vertexIndex, fixedRot)
+        --AttachEntityToEntity(newTrailer, trailer, 0, 0.0, -dist, 0.0, 0.0, 0.0, 0.0, 0, false, false, false, 0, true)
+        trailer = newTrailer
+    end
+end, false)
+
+local propify_data = {}
+RegisterCommand("propify", function(source, args, raw)
+    local model = (args[1] or "")
+    local xo = (args[2] or 0.0) + 0.0
+    local yo = (args[3] or 0.0) + 0.0
+    local zo = (args[4] or 0.0) + 0.0
+    local xr = (args[5] or 0.0) + 0.0
+    local yr = (args[6] or 0.0) + 0.0
+    local zr = (args[7] or 0.0) + 0.0
+    local ped = GetPlayerPed(-1)
+    local veh = GetVehiclePedIsIn(ped, false)
+    requestModel(model)
+    local obj = CreateObject(model, 0.0, 0.0, 0.0, true, 0, true)
+    SetEntityVisible(veh, false, 2)
+    AttachEntityToEntity(obj, veh, 0, xo, yo, zo, xr, yr, zr, 0, false, true, false, 0, true)
+    propify_data[veh] = obj
+end, false)
+
+CreateThread(function()
+    while true do
+        Wait(5)
+        for k,v in next, propify_data do
+            if not DoesEntityExist(k) then
+                DeleteEntity(v)
+                propify_data[k] = nil
+            end
+        end
+    end
+end)
