@@ -26,6 +26,9 @@ local rank_special = {
             [8] = {title = "Specialized Train Conductor"},
             [10] = {title = "Professional Train Conductor", namecolor = "chocolate"},
         }},
+    ["dockhandler"] =       {suffix = {x=5,y=42}, color = "orange", title = "Dock Handler"},
+    --["dockhandler"] =       {suffix = {x=12,y=41}, color = "orange", title = "Dock Handler"}, -- BACKUP USES RAISED CONTAINER ICON
+    ["craneoperator"] =     {suffix = {x=7,y=42}, color = "orange", title = "Crane Operator"},
     ["emergency"] =         {suffix = {x=36,y=22}, color = "tomato", title = "EMS",
         levelnames = {"ems", "ems"},
         levels = {
@@ -82,6 +85,7 @@ local rank_special = {
             [9] = {title = "Police Colonel+"},
             [10] = {title = "Police Superintendent", namecolor = "blue"},
         }},
+    ["quarry"] =            {suffix = {x=4,y=42}, color = "orange", title = "Quarry Worker"},
     ["snowplow"] =          {suffix = {x=35,y=39}, color = "white", title = "Snowplow Driver"},
     ["taxi"] =              {suffix = {x=36,y=26}, color = "gold", title = "Taxi"},
     ["trucker"] =           {suffix = {x=36,y=32}, color = "darkgreen", title = "Trucker",
