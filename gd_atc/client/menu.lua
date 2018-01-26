@@ -33,9 +33,9 @@ function createFlashingBlip(pos, blipid, time, col, override)
 end
 
 function callATC(region, method, runway, p4, override)
-    local msg = "^1%s ATC: ^3%s ^0is preparing ^1%s ^0at runway ^2%s"
+    local msg = "^1^*%s ATC: ^r^3%s ^0is preparing ^1^*%s ^r^0at runway ^2^*%s"
     if p4 or 0 then
-        msg = "^1%s ATC: ^3%s ^0is preparing ^1%s ^0at ^2%s"
+        msg = "^1^*%s ATC: ^r^3%s ^0is preparing ^1^*%s ^r^0at ^2^*%s"
     end
     local name = GetPlayerName(PlayerId())
     msg = string.format(msg, region, name, method, runway)
@@ -144,68 +144,68 @@ Menu.item = {
         {['Title'] = 'L.S.I.A', ['SubMenu'] = {
             ['Title'] = 'ATC L.S.I.A',
             ['Items'] = {
-                { ['Title'] = 'Land 3 / 21 (Jet)', ['Function'] = landLSIA, ['extraData'] = {runway = '3 / 21 (JET)', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
-                { ['Title'] = 'Land 30R / 12L (Main)', ['Function'] = landLSIA, ['extraData'] = {runway = '30R / 12L (MAIN)', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
-                { ['Title'] = 'Land 30L / 12R (Side)', ['Function'] = landLSIA, ['extraData'] = {runway = '30L / 12R (SIDE)', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
-                { ['Title'] = 'Takeoff 3 / 21 (Jet)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '3 / 21 (JET)', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
-                { ['Title'] = 'Takeoff 30R / 12L (Main)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30R / 12L (MAIN)', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
-                { ['Title'] = 'Takeoff 30L / 12R (Side)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30L / 12R (SIDE)', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
+                { ['Title'] = '~g~Land ~y~3 / 21 ~b~(Jet)', ['Function'] = landLSIA, ['extraData'] = {runway = '3 / 21 (JET)', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
+                { ['Title'] = '~g~Land ~y~30R / 12L ~r~(Main)', ['Function'] = landLSIA, ['extraData'] = {runway = '30R / 12L (MAIN)', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
+                { ['Title'] = '~g~Land ~y~30L / 12R ~g~(Side)', ['Function'] = landLSIA, ['extraData'] = {runway = '30L / 12R (SIDE)', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
+                { ['Title'] = '~b~Takeoff ~y~3 / 21 ~b~(Jet)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '3 / 21 (JET)', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
+                { ['Title'] = '~b~Takeoff ~y~30R / 12L ~r~(Main)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30R / 12L (MAIN)', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
+                { ['Title'] = '~b~Takeoff ~y~30L / 12R ~g~(Side)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30L / 12R (SIDE)', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
             }
         }},
         {['Title'] = 'Sandy Shores', ['SubMenu'] = {
             ['Title'] = 'ATC Sandy Shores',
             ['Items'] = {
-                { ['Title'] = 'Land 5 / 23 (Jet)', ['Function'] = landSandy, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
-                { ['Title'] = 'Land 26L / 8R (Side)', ['Function'] = landSandy, ['extraData'] = {runway = '26L / 8R (SIDE)', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
-                { ['Title'] = 'Land 26R / 8L (Main)', ['Function'] = landSandy, ['extraData'] = {runway = '26R / 8L (MAIN)', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
-                { ['Title'] = 'Takeoff 5 / 23 (Jet)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
-                { ['Title'] = 'Takeoff 26L / 8R (Side)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26L / 8R (SIDE)', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
-                { ['Title'] = 'Takeoff 26R / 8L (Main)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26R / 8L (MAIN)', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
+                { ['Title'] = '~g~Land ~y~5 / 23 ~b~(Jet)', ['Function'] = landSandy, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
+                { ['Title'] = '~g~Land ~y~26L / 8R ~g~(Side)', ['Function'] = landSandy, ['extraData'] = {runway = '26L / 8R (SIDE)', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
+                { ['Title'] = '~g~Land ~y~26R / 8L ~r~(Main)', ['Function'] = landSandy, ['extraData'] = {runway = '26R / 8L (MAIN)', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
+                { ['Title'] = '~b~Takeoff ~y~5 / 23 ~b~(Jet)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
+                { ['Title'] = '~b~Takeoff ~y~26L / 8R ~g~(Side)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26L / 8R (SIDE)', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
+                { ['Title'] = '~b~Takeoff ~y~26R / 8L ~r~(Main)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26R / 8L (MAIN)', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
             }
         }},
         {['Title'] = 'Zancudo', ['SubMenu'] = {
             ['Title'] = 'ATC Zancudo',
             ['Items'] = {
-                { ['Title'] = 'Land 33 / 15 (Jet)', ['Function'] = landZancudo, ['extraData'] = {runway = '33 / 15 (JET)', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
-                { ['Title'] = 'Land 30 / 12 (Main)', ['Function'] = landZancudo, ['extraData'] = {runway = '30 / 12 (MAIN)', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
-                { ['Title'] = 'Takeoff 33 / 15 (Jet)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '33 / 15 (JET)', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
-                { ['Title'] = 'Takeoff 30 / 12 (Main)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '30 / 12 (MAIN)', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
+                { ['Title'] = '~g~Land ~y~33 / 15 ~b~(Jet)', ['Function'] = landZancudo, ['extraData'] = {runway = '33 / 15 (JET)', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
+                { ['Title'] = '~g~Land ~y~30 / 12 ~r~(Main)', ['Function'] = landZancudo, ['extraData'] = {runway = '30 / 12 (MAIN)', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
+                { ['Title'] = '~b~Takeoff ~y~33 / 15 ~b~(Jet)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '33 / 15 (JET)', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
+                { ['Title'] = '~b~Takeoff ~y~30 / 12 ~r~(Main)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '30 / 12 (MAIN)', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
             }
         }},
         {['Title'] = 'McKenzie', ['SubMenu'] = {
             ['Title'] = 'ATC McKenzie',
             ['Items'] = {
-                { ['Title'] = 'Land 25 / 7 (Main)', ['Function'] = landMcKenzie, ['extraData'] = {runway = '25 / 7 (MAIN)', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
-                { ['Title'] = 'Takeoff 25 / 7 (Main)', ['Function'] = takeoffMcKenzie, ['extraData'] = {runway = '25 / 7 (MAIN)', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
+                { ['Title'] = '~g~Land ~y~25 / 7 ~r~(Main)', ['Function'] = landMcKenzie, ['extraData'] = {runway = '25 / 7 (MAIN)', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
+                { ['Title'] = '~b~Takeoff ~y~25 / 7 ~r~(Main)', ['Function'] = takeoffMcKenzie, ['extraData'] = {runway = '25 / 7 (MAIN)', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
             }
         }},
         {['Title'] = 'Paleto Bay', ['SubMenu'] = {
             ['Title'] = 'ATC Paleto Bay',
             ['Items'] = {
-                { ['Title'] = 'Land 5 / 23 (Jet)', ['Function'] = landPaleto, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
-                { ['Title'] = 'Land 7 / 25 (Main)', ['Function'] = landPaleto, ['extraData'] = {runway = '7 / 25 (MAIN)', pos = {x = -587.827454, y = 6474.951660, z = 6.639785}} },
-                { ['Title'] = 'Takeoff 5 / 23 (Jet)', ['Function'] = takeoffPaleto, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
-                { ['Title'] = 'Takeoff 7 / 25 (Main)', ['Function'] = takeoffPaleto, ['extraData'] = {runway = '7 / 25 (MAIN)', pos = {x = -587.827454, y = 6474.951660, z = 6.639785}} },
+                { ['Title'] = '~g~Land ~y~5 / 23 ~b~(Jet)', ['Function'] = landPaleto, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
+                { ['Title'] = '~g~Land ~y~7 / 25 ~r~(Main)', ['Function'] = landPaleto, ['extraData'] = {runway = '7 / 25 (MAIN)', pos = {x = -587.827454, y = 6474.951660, z = 6.639785}} },
+                { ['Title'] = '~b~Takeoff ~y~5 / 23 ~b~(Jet)', ['Function'] = takeoffPaleto, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
+                { ['Title'] = '~b~Takeoff ~y~7 / 25 ~r~(Main)', ['Function'] = takeoffPaleto, ['extraData'] = {runway = '7 / 25 (MAIN)', pos = {x = -587.827454, y = 6474.951660, z = 6.639785}} },
             }
         }},
         {['Title'] = 'Pacific Ocean', ['SubMenu'] = {
             ['Title'] = 'ATC Pacific Ocean',
             ['Items'] = {
-                { ['Title'] = 'Land 18R / 36L (Jet)', ['Function'] = landPacific, ['extraData'] = {runway = '18R / 36L (JET)', pos = {x = 2907.530273, y = -980.678345, z = 7.899795}} },
-                { ['Title'] = 'Land 18L / 36R (Main)', ['Function'] = landPacific, ['extraData'] = {runway = '18L / 36R (MAIN)', pos = {x = 2996.983398, y = -992.581482, z = 7.899790}} },
-                { ['Title'] = 'Land 9 / 27 (Side)', ['Function'] = landPacific, ['extraData'] = {runway = '9 / 27 (SIDE)', pos = {x = 3310.866455, y = -822.977173, z = 7.889794}} },
-                { ['Title'] = 'Land 4 / 22 (Diagonal)', ['Function'] = landPacific, ['extraData'] = {runway = '4 / 22 (DIAG)', pos = {x = 3261.814941, y = -676.519897, z = 7.889794}} },
-                { ['Title'] = 'Takeoff 18R / 36L (Jet)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '18R / 36L (JET)', pos = {x = 2907.530273, y = -980.678345, z = 7.899795}} },
-                { ['Title'] = 'Takeoff 18L / 36R (Main)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '18L / 36R (MAIN)', pos = {x = 2996.983398, y = -992.581482, z = 7.899790}} },
-                { ['Title'] = 'Takeoff 9 / 27 (Side)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '9 / 27 (SIDE)', pos = {x = 3310.866455, y = -822.977173, z = 7.889794}} },
-                { ['Title'] = 'Takeoff 4 / 22 (Diagonal)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '4 / 22 (DIAG)', pos = {x = 3261.814941, y = -676.519897, z = 7.889794}} },
+                { ['Title'] = '~g~Land ~y~17 / 35 ~b~(Jet)', ['Function'] = landPacific, ['extraData'] = {runway = '17 / 35 (JET)', pos = {x = 2907.530273, y = -980.678345, z = 7.899795}} },
+                { ['Title'] = '~g~Land ~y~18 / ~y~36 ~r~(Main)', ['Function'] = landPacific, ['extraData'] = {runway = '18 / 36 (MAIN)', pos = {x = 2996.983398, y = -992.581482, z = 7.899790}} },
+                { ['Title'] = '~g~Land ~y~9 / ~y~27 ~g~(Side)', ['Function'] = landPacific, ['extraData'] = {runway = '9 / 27 (SIDE)', pos = {x = 3310.866455, y = -822.977173, z = 7.889794}} },
+                { ['Title'] = '~g~Land ~y~4 / ~y~22 ~g~(Diagonal)', ['Function'] = landPacific, ['extraData'] = {runway = '4 / 22 (DIAG)', pos = {x = 3261.814941, y = -676.519897, z = 7.889794}} },
+                { ['Title'] = '~b~Takeoff ~y~17 / 35 ~b~(Jet)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '17 / 35 (JET)', pos = {x = 2907.530273, y = -980.678345, z = 7.899795}} },
+                { ['Title'] = '~b~Takeoff ~y~18 / 36 ~r~(Main)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '18 / 36 (MAIN)', pos = {x = 2996.983398, y = -992.581482, z = 7.899790}} },
+                { ['Title'] = '~b~Takeoff ~y~9 / 27 ~b~(Side)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '9 / 27 (SIDE)', pos = {x = 3310.866455, y = -822.977173, z = 7.889794}} },
+                { ['Title'] = '~b~Takeoff ~y~4 / 22 ~b~(Diagonal)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '4 / 22 (DIAG)', pos = {x = 3261.814941, y = -676.519897, z = 7.889794}} },
             }
         }},
         {['Title'] = 'Aircraft Carrier', ['SubMenu'] = {
             ['Title'] = 'ATC Carrier',
             ['Items'] = {
-                { ['Title'] = 'Land 34 / 16 (Main)', ['Function'] = landCarrier, ['extraData'] = {runway = '34 / 16 (MAIN)', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} },
-                { ['Title'] = 'Takeoff 34 / 16 (Main)', ['Function'] = takeoffCarrier, ['extraData'] = {runway = '34 / 16 (MAIN)', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} }
+                { ['Title'] = '~g~Land ~y~34 / 16 ~r~(Main)', ['Function'] = landCarrier, ['extraData'] = {runway = '34 / 16 (MAIN)', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} },
+                { ['Title'] = '~b~Takeoff ~y~34 / 16 ~r~(Main)', ['Function'] = takeoffCarrier, ['extraData'] = {runway = '34 / 16 (MAIN)', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} }
             }
         }},
         {['Title'] = '~y~Misc ATC', ['SubMenu'] = {
