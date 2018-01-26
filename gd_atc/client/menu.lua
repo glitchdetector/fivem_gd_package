@@ -228,7 +228,7 @@ Menu.tileBackgroundColor = { 255,255,255, 255 }
 Menu.textColor = { 255,255,255,255 }
 Menu.textColorActive = { 255,255,255, 255 }
 
-Menu.keyOpenMenu = 37 -- TAB
+Menu.keyOpenMenu = 99 -- TAB
 Menu.keyOpenMenu2 = 179 -- CONTROLLER SQUARE/X MMB
 Menu.keyUp = 172 -- PhoneUp
 Menu.keyDown = 173 -- PhoneDown
@@ -350,7 +350,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
         if IsPedInAnyPlane(GetPlayerPed(-1)) or IsPedInAnyHeli(GetPlayerPed(-1)) then
-            if IsControlJustPressed(1, Menu.keyOpenMenu) or IsControlJustPressed(1, Menu.keyOpenMenu2) then
+            if IsControlJustPressed(1, Menu.keyOpenMenu) then
                 Menu.initMenu()
                 Menu.isOpen = not Menu.isOpen
             end
