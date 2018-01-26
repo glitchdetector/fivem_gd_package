@@ -323,6 +323,7 @@ function checkDeliver()
                         AttachEntityToEntity(current_job.container, current_job.truck_trailer, 0, 0.0, 0.0, 0.35, 0.0, 0.0, 0.0, 0, false, true, false, 0, true)
                         TaskVehicleDriveWander(current_job.truck_driver, current_job.truck_cab, 40.0, 786468)
                         clearJob()
+                        TriggerServerEvent("gd_jobs_handler:finishJob", 500)
                     end
                 end
             else
