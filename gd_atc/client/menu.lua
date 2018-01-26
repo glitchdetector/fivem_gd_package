@@ -33,9 +33,9 @@ function createFlashingBlip(pos, blipid, time, col, override)
 end
 
 function callATC(region, method, runway, p4, override)
-    local msg = "^1^*%s ATC: ^r^3%s ^0is preparing ^1^*%s ^r^0at runway ^2^*%s"
+    local msg = "^1%s ATC: ^r^3%s ^0is preparing ^1%s ^r^0at runway ^2%s"
     if p4 or 0 then
-        msg = "^1^*%s ATC: ^r^3%s ^0is preparing ^1^*%s ^r^0at ^2^*%s"
+        msg = "^1%s ATC: ^r^3%s ^0is preparing ^1%s ^r^0at ^2^*%s"
     end
     local name = GetPlayerName(PlayerId())
     msg = string.format(msg, region, name, method, runway)
