@@ -26,7 +26,7 @@ Citizen.CreateThread(function()
         Wait(50)
         if not inAircraft and (IsPedInAnyPlane(GetPlayerPed(-1)) or IsPedInAnyHeli(GetPlayerPed(-1))) then
             SetNotificationTextEntry("STRING")
-            AddTextComponentString("~w~Press ~g~B ~w~to open the ~y~ATC menu~w~.\nIt's ~r~mandatory ~w~to use when piloting!")
+            AddTextComponentString("~w~Press ~g~TAB ~w~to open the ~y~ATC menu~w~.\nIt's ~r~mandatory ~w~to use when piloting!")
             DrawNotification(false, false)
         end
         inAircraft = (IsPedInAnyPlane(GetPlayerPed(-1)) or IsPedInAnyHeli(GetPlayerPed(-1)))

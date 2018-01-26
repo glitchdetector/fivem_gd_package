@@ -6,12 +6,12 @@
 --      https://www.facebook.com/lan3mtv
 --====================================================================================
 
-function landMenu(data) 
+function landMenu(data)
     for k,v in next, data do
-        Citizen.Trace(tostring(k) .. ": " .. tostring(v)) 
+        Citizen.Trace(tostring(k) .. ": " .. tostring(v))
     end
     TriggerEvent('chatMessage', "", {255, 0, 0}, "Function call: " .. data.Title)
-    if data.extraData ~= nil then 
+    if data.extraData ~= nil then
         TriggerEvent('chatMessage', "", {255, 0, 0}, "extraData : " .. data.extraData)
     end
 end
@@ -37,7 +37,7 @@ function callATC(region, method, runway, p4, override)
     if p4 or 0 then
         msg = "^1%s ATC: ^3%s ^0is preparing ^1%s ^0at ^2%s"
     end
-    local name = GetPlayerName(-1)
+    local name = GetPlayerName(PlayerId())
     msg = string.format(msg, region, name, method, runway)
     TriggerServerEvent('atc:message', msg, override or 0)
 end
@@ -65,6 +65,11 @@ end
 function takeoffPaleto(data)
     takeoffMarker(data.extraData.pos)
     callATC("Paleto Bay", "takeoff", data.extraData.runway)
+end
+
+function takeoffPacific(data)
+    takeoffMarker(data.extraData.pos)
+    callATC("Pacific Ocean", "takeoff", data.extraData.runway)
 end
 
 function takeoffCarrier(data)
@@ -98,6 +103,11 @@ function landPaleto(data)
     callATC("Paleto Bay", "to land", data.extraData.runway)
 end
 
+function landPacific(data)
+    landMarker(data.extraData.pos)
+    callATC("Pacific Ocean", "to land", data.extraData.runway)
+end
+
 function landCarrier(data)
     landMarker(data.extraData.pos)
     callATC("Aircraft Carrier", "to land", data.extraData.runway)
@@ -112,16 +122,16 @@ end
 
 function emergencyLanding()
     local pos = GetEntityCoords(GetPlayerPed(-1))
-    callATC("Emergency", "emergency landing", string.format("%i°N %i°E", math.floor(pos.y), math.floor(pos.x)), 0, true)    
+    callATC("Emergency", "emergency landing", string.format("%i°N %i°E", math.floor(pos.y), math.floor(pos.x)), 0, true)
     pos = {x=pos.x,y=pos.y,z=pos.z}
     createFlashingBlip(pos, 556, 30, true)
 end
 
 function mayday()
     local pos = GetEntityCoords(GetPlayerPed(-1))
-    callATC("Emergency", "emergency landing", string.format("%i°N %i°E", math.floor(pos.y), math.floor(pos.x)), 0, true)    
+    callATC("Emergency", "emergency landing", string.format("%i°N %i°E", math.floor(pos.y), math.floor(pos.x)), 0, true)
     pos = {x=pos.x,y=pos.y,z=pos.z}
-    createFlashingBlip(pos, 556, 30, true, true)    
+    createFlashingBlip(pos, 556, 30, true, true)
 end
 
 --====================================================================================
@@ -134,53 +144,68 @@ Menu.item = {
         {['Title'] = 'L.S.I.A', ['SubMenu'] = {
             ['Title'] = 'ATC L.S.I.A',
             ['Items'] = {
-                { ['Title'] = 'Land 3 / 21 (Jet)', ['Function'] = landLSIA, ['extraData'] = {runway = '3 / 21', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
-                { ['Title'] = 'Land 30L / 12R', ['Function'] = landLSIA, ['extraData'] = {runway = '30L / 12R', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
-                { ['Title'] = 'Land 30R / 12L', ['Function'] = landLSIA, ['extraData'] = {runway = '30R / 12L', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
-                { ['Title'] = 'Takeoff 3 / 21 (Jet)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '3 / 21', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
-                { ['Title'] = 'Takeoff 30L / 12R', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30L / 12R', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
-                { ['Title'] = 'Takeoff 30R / 12L', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30R / 12L', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
+                { ['Title'] = 'Land 3 / 21 (Jet)', ['Function'] = landLSIA, ['extraData'] = {runway = '3 / 21 (JET)', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
+                { ['Title'] = 'Land 30R / 12L (Main)', ['Function'] = landLSIA, ['extraData'] = {runway = '30R / 12L (MAIN)', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
+                { ['Title'] = 'Land 30L / 12R (Side)', ['Function'] = landLSIA, ['extraData'] = {runway = '30L / 12R (SIDE)', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
+                { ['Title'] = 'Takeoff 3 / 21 (Jet)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '3 / 21 (JET)', pos = {x = -1484.241333, y = -2467.335449, z = 12.945147}} },
+                { ['Title'] = 'Takeoff 30R / 12L (Main)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30R / 12L (MAIN)', pos = {x = -1291.800293, y = -2973.775635, z = 12.944430}} },
+                { ['Title'] = 'Takeoff 30L / 12R (Side)', ['Function'] = takeoffLSIA, ['extraData'] = {runway = '30L / 12R (SIDE)', pos = {x = -1386.934204, y = -3114.256836, z = 12.944432}} },
             }
         }},
         {['Title'] = 'Sandy Shores', ['SubMenu'] = {
             ['Title'] = 'ATC Sandy Shores',
             ['Items'] = {
-                { ['Title'] = 'Land 5 / 23 (Jet)', ['Function'] = landSandy, ['extraData'] = {runway = '5 / 23', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
-                { ['Title'] = 'Land 26L / 8R (Side)', ['Function'] = landSandy, ['extraData'] = {runway = '26L / 8R', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
-                { ['Title'] = 'Land 26R / 8L (Main)', ['Function'] = landSandy, ['extraData'] = {runway = '26R / 8L', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
-                { ['Title'] = 'Takeoff 5 / 23 (Jet)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '5 / 23', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
-                { ['Title'] = 'Takeoff 26L / 8R (Side)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26L / 8R', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
-                { ['Title'] = 'Takeoff 26R / 8L (Main)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26R / 8L', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
+                { ['Title'] = 'Land 5 / 23 (Jet)', ['Function'] = landSandy, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
+                { ['Title'] = 'Land 26L / 8R (Side)', ['Function'] = landSandy, ['extraData'] = {runway = '26L / 8R (SIDE)', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
+                { ['Title'] = 'Land 26R / 8L (Main)', ['Function'] = landSandy, ['extraData'] = {runway = '26R / 8L (MAIN)', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
+                { ['Title'] = 'Takeoff 5 / 23 (Jet)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = 1500.337769, y = 3094.885986, z = 39.531616}} },
+                { ['Title'] = 'Takeoff 26L / 8R (Side)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26L / 8R (SIDE)', pos = {x = 1354.870361, y = 3088.605713, z = 39.534142}} },
+                { ['Title'] = 'Takeoff 26R / 8L (Main)', ['Function'] = takeoffSandy, ['extraData'] = {runway = '26R / 8L (MAIN)', pos = {x = 1337.828125, y = 3151.860107, z = 39.414097}} },
             }
         }},
-        {['Title'] = 'Zanduco', ['SubMenu'] = {
+        {['Title'] = 'Zancudo', ['SubMenu'] = {
             ['Title'] = 'ATC Zancudo',
             ['Items'] = {
-                { ['Title'] = 'Land 30 / 12 (Main)', ['Function'] = landZancudo, ['extraData'] = {runway = '30 / 12', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
-                { ['Title'] = 'Land 33 / 15 (Jet)', ['Function'] = landZancudo, ['extraData'] = {runway = '33 / 15', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
-                { ['Title'] = 'Takeoff 30 / 12 (Main)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '30 / 12', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
-                { ['Title'] = 'Takeoff 33 / 15 (Jet)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '33 / 15', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
+                { ['Title'] = 'Land 33 / 15 (Jet)', ['Function'] = landZancudo, ['extraData'] = {runway = '33 / 15 (JET)', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
+                { ['Title'] = 'Land 30 / 12 (Main)', ['Function'] = landZancudo, ['extraData'] = {runway = '30 / 12 (MAIN)', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
+                { ['Title'] = 'Takeoff 33 / 15 (Jet)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '33 / 15 (JET)', pos = {x = -2480.605225, y = 3235.851807, z = 31.925560}} },
+                { ['Title'] = 'Takeoff 30 / 12 (Main)', ['Function'] = takeoffZancudo, ['extraData'] = {runway = '30 / 12 (MAIN)', pos = {x = -2375.579834, y = 3070.625732, z = 31.825928}} },
             }
         }},
         {['Title'] = 'McKenzie', ['SubMenu'] = {
             ['Title'] = 'ATC McKenzie',
             ['Items'] = {
-                { ['Title'] = 'Land 25 / 7 (Main)', ['Function'] = landMcKenzie, ['extraData'] = {runway = '25 / 7', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
-                { ['Title'] = 'Takeoff 25 / 7 (Main)', ['Function'] = takeoffMcKenzie, ['extraData'] = {runway = '25 / 7', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
+                { ['Title'] = 'Land 25 / 7 (Main)', ['Function'] = landMcKenzie, ['extraData'] = {runway = '25 / 7 (MAIN)', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
+                { ['Title'] = 'Takeoff 25 / 7 (Main)', ['Function'] = takeoffMcKenzie, ['extraData'] = {runway = '25 / 7 (MAIN)', pos = {x = 2030.718628, y = 4755.413574, z = 40.124157}} },
             }
         }},
         {['Title'] = 'Paleto Bay', ['SubMenu'] = {
             ['Title'] = 'ATC Paleto Bay',
             ['Items'] = {
-                { ['Title'] = 'Land 5 / 23 (Main)', ['Function'] = landPaleto, ['extraData'] = {runway = '5 / 23', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
-                { ['Title'] = 'Takeoff 5 / 23 (Main)', ['Function'] = takeoffPaleto, ['extraData'] = {runway = '5 / 23', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
+                { ['Title'] = 'Land 5 / 23 (Jet)', ['Function'] = landPaleto, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
+                { ['Title'] = 'Land 7 / 25 (Main)', ['Function'] = landPaleto, ['extraData'] = {runway = '7 / 25 (MAIN)', pos = {x = -587.827454, y = 6474.951660, z = 6.639785}} },
+                { ['Title'] = 'Takeoff 5 / 23 (Jet)', ['Function'] = takeoffPaleto, ['extraData'] = {runway = '5 / 23 (JET)', pos = {x = -380.410980, y = 6497.020508, z = 7.386814}} },
+                { ['Title'] = 'Takeoff 7 / 25 (Main)', ['Function'] = takeoffPaleto, ['extraData'] = {runway = '7 / 25 (MAIN)', pos = {x = -587.827454, y = 6474.951660, z = 6.639785}} },
+            }
+        }},
+        {['Title'] = 'Pacific Ocean', ['SubMenu'] = {
+            ['Title'] = 'ATC Pacific Ocean',
+            ['Items'] = {
+                { ['Title'] = 'Land 18R / 36L (Jet)', ['Function'] = landPacific, ['extraData'] = {runway = '18R / 36L (JET)', pos = {x = 2907.530273, y = -980.678345, z = 7.899795}} },
+                { ['Title'] = 'Land 18L / 36R (Main)', ['Function'] = landPacific, ['extraData'] = {runway = '18L / 36R (MAIN)', pos = {x = 2996.983398, y = -992.581482, z = 7.899790}} },
+                { ['Title'] = 'Land 9 / 27 (Side)', ['Function'] = landPacific, ['extraData'] = {runway = '9 / 27 (SIDE)', pos = {x = 3310.866455, y = -822.977173, z = 7.889794}} },
+                { ['Title'] = 'Land 4 / 22 (Diagonal)', ['Function'] = landPacific, ['extraData'] = {runway = '4 / 22 (DIAG)', pos = {x = 3261.814941, y = -676.519897, z = 7.889794}} },
+                { ['Title'] = 'Takeoff 18R / 36L (Jet)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '18R / 36L (JET)', pos = {x = 2907.530273, y = -980.678345, z = 7.899795}} },
+                { ['Title'] = 'Takeoff 18L / 36R (Main)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '18L / 36R (MAIN)', pos = {x = 2996.983398, y = -992.581482, z = 7.899790}} },
+                { ['Title'] = 'Takeoff 9 / 27 (Side)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '9 / 27 (SIDE)', pos = {x = 3310.866455, y = -822.977173, z = 7.889794}} },
+                { ['Title'] = 'Takeoff 4 / 22 (Diagonal)', ['Function'] = takeoffPacific, ['extraData'] = {runway = '4 / 22 (DIAG)', pos = {x = 3261.814941, y = -676.519897, z = 7.889794}} },
             }
         }},
         {['Title'] = 'Aircraft Carrier', ['SubMenu'] = {
             ['Title'] = 'ATC Carrier',
             ['Items'] = {
-                { ['Title'] = 'Land 34 / 16 (Main)', ['Function'] = landCarrier, ['extraData'] = {runway = '34 / 16', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} },
-                { ['Title'] = 'Takeoff 34 / 16 (Main)', ['Function'] = takeoffCarrier, ['extraData'] = {runway = '34 / 16', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} }
+                { ['Title'] = 'Land 34 / 16 (Main)', ['Function'] = landCarrier, ['extraData'] = {runway = '34 / 16 (MAIN)', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} },
+                { ['Title'] = 'Takeoff 34 / 16 (Main)', ['Function'] = takeoffCarrier, ['extraData'] = {runway = '34 / 16 (MAIN)', pos = {x = 3049.651367, y = -4702.908691, z = 13.837625}} }
             }
         }},
         {['Title'] = '~y~Misc ATC', ['SubMenu'] = {
@@ -203,11 +228,12 @@ Menu.tileBackgroundColor = { 255,255,255, 255 }
 Menu.textColor = { 255,255,255,255 }
 Menu.textColorActive = { 255,255,255, 255 }
 
-Menu.keyOpenMenu = 29 -- B
+Menu.keyOpenMenu = 37 -- TAB
+Menu.keyOpenMenu2 = 179 -- CONTROLLER SQUARE/X MMB
 Menu.keyUp = 172 -- PhoneUp
 Menu.keyDown = 173 -- PhoneDown
-Menu.keyLeft = 174 -- PhoneLeft || Not use next release Maybe 
-Menu.keyRight =	175 -- PhoneRigth || Not use next release Maybe 
+Menu.keyLeft = 174 -- PhoneLeft || Not use next release Maybe
+Menu.keyRight =	175 -- PhoneRigth || Not use next release Maybe
 Menu.keySelect = 176 -- PhoneSelect
 Menu.KeyCancel = 177 -- PhoneCancel
 
@@ -240,14 +266,14 @@ function Menu.initText(textColor, font, scale)
     SetTextEntry("STRING")
 end
 
-function Menu.draw() 
+function Menu.draw()
     -- Draw Rect
     local pos = 0
     local menu = Menu.getCurrentMenu()
     local selectValue = Menu.currentPos[#Menu.currentPos]
     local nbItem = #menu.Items
     -- draw background title & title
-    Menu.drawRect(Menu.posX, Menu.posY , Menu.ItemWidth, Menu.ItemHeight * 2, Menu.tileBackgroundColor)    
+    Menu.drawRect(Menu.posX, Menu.posY , Menu.ItemWidth, Menu.ItemHeight * 2, Menu.tileBackgroundColor)
     Menu.initText(Menu.tileTextColor, 4, 0.7)
     AddTextComponentString(menu.Title)
     DrawText(Menu.posX + Menu.ItemWidth/2, Menu.posY)
@@ -265,7 +291,7 @@ function Menu.draw()
         AddTextComponentString(value.Title)
         DrawText(Menu.posX + Menu.ItemWidth/2, Menu.posY + Menu.ItemHeight * (pos+1))
     end
-    
+
 end
 
 function Menu.getCurrentMenu()
@@ -282,22 +308,22 @@ function Menu.initMenu()
 end
 
 function Menu.keyControl()
-    if IsControlJustPressed(1, Menu.keyDown) then 
+    if IsControlJustPressed(1, Menu.keyDown) then
         local cMenu = Menu.getCurrentMenu()
         local size = #cMenu.Items
         local slcp = #Menu.currentPos
         Menu.currentPos[slcp] = (Menu.currentPos[slcp] % size) + 1
 
-    elseif IsControlJustPressed(1, Menu.keyUp) then 
+    elseif IsControlJustPressed(1, Menu.keyUp) then
         local cMenu = Menu.getCurrentMenu()
         local size = #cMenu.Items
         local slcp = #Menu.currentPos
         Menu.currentPos[slcp] = ((Menu.currentPos[slcp] - 2 + size) % size) + 1
 
-    elseif IsControlJustPressed(1, Menu.KeyCancel) then 
+    elseif IsControlJustPressed(1, Menu.KeyCancel) then
         table.remove(Menu.currentPos)
         if #Menu.currentPos == 0 then
-            Menu.isOpen = false 
+            Menu.isOpen = false
         end
 
     elseif IsControlJustPressed(1, Menu.keySelect)  then
@@ -323,8 +349,8 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
-        if IsPedInAnyPlane(GetPlayerPed(-1)) or IsPedInAnyHeli(GetPlayerPed(-1)) or 1 then
-            if IsControlJustPressed(1, Menu.keyOpenMenu) then
+        if IsPedInAnyPlane(GetPlayerPed(-1)) or IsPedInAnyHeli(GetPlayerPed(-1)) then
+            if IsControlJustPressed(1, Menu.keyOpenMenu) or IsControlJustPressed(1, Menu.keyOpenMenu2) then
                 Menu.initMenu()
                 Menu.isOpen = not Menu.isOpen
             end
