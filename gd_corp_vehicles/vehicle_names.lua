@@ -11,4 +11,7 @@ Citizen.CreateThread(function()
 	AddTextEntry("0x987923B1", "Post OP EMB-390")
 	AddTextEntry("0x445F206C", "Post OP Boxville")
 	AddTextEntry("0x6019E828", "Post OP Mule")
-end)
+	AddTextEntry("0xC8ECA562", "frllc_hauler2")
+	AddTextEntry("0x6B213447", "sal_packer")
+	AddTextEntry("0xADE815B9", "sal_tr4")
+	end
