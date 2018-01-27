@@ -1,5 +1,6 @@
 <CHandlingDataMgr>
     <HandlingData>
+        <!-- COLLINSCO -->
         <Item type="CHandlingData">
             <handlingName>collinsco_phantom3</handlingName>
             <fMass value="12000.000000" />
@@ -57,6 +58,7 @@
                 <Item type="NULL" />
             </SubHandlingData>
         </Item>
+        <!-- POSTOP -->
         <Item type="CHandlingData">
             <handlingName>postopplane</handlingName>
             <fMass value="70000.000000" />
@@ -263,6 +265,7 @@
                 <Item type="NULL" />
             </SubHandlingData>
         </Item>
+        <!-- SAL -->
         <Item type="CHandlingData">
             <handlingName>PACKERSEMI</handlingName>
             <fMass value="16000.000000" />

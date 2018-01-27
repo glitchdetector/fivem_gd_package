@@ -14,4 +14,4 @@ Citizen.CreateThread(function()
 	AddTextEntry("0xC8ECA562", "frllc_hauler2")
 	AddTextEntry("0x6B213447", "sal_packer")
 	AddTextEntry("0xADE815B9", "sal_tr4")
-	end
+end)
