@@ -358,14 +358,6 @@ end
 
 -- Main loop
 Citizen.CreateThread(function()
-    if true then -- Testing shit
-        local __pos = {name = "interioroutsidexd", x = 1209.253418, y = -3283.602539, z = 29.403765}
-        local __model = "apc"
-        requestModel(__model)
-        -- Create the container at the location
-        local __obj = CreateObject(__model, __pos.x, __pos.y, __pos.z, true, 0, true)
-        FreezeEntityPosition(__obj, true)
-    end
     current_job.blips = {}
     for k,v in next, job_blips do
         local blip = AddBlipForCoord(v.x, v.y, v.z)
