@@ -1,22 +1,22 @@
 files {
-    'steam/cabs/vehicles.meta',
-    'steam/collinsco/vehicles.meta',
-    'steam/frllc/vehicles.meta',
-    'steam/narwhalcorp/vehicles.meta',
-    'steam/postop/vehicles.meta',
-    'steam/sal/vehicles.meta',
+    'stream/cabs/vehicles.meta',
+    'stream/collinsco/vehicles.meta',
+    'stream/frllc/vehicles.meta',
+    'stream/narwhalcorp/vehicles.meta',
+    'stream/postop/vehicles.meta',
+    'stream/sal/vehicles.meta',
     'carvariations.meta',
     'handling.meta'
 }
 
 data_file 'HANDLING_FILE' 'handling.meta'
 
-data_file 'VEHICLE_METADATA_FILE' 'steam/cabs/vehicles.meta'
-data_file 'VEHICLE_METADATA_FILE' 'steam/collinsco/vehicles.meta'
-data_file 'VEHICLE_METADATA_FILE' 'steam/frllc/vehicles.meta'
-data_file 'VEHICLE_METADATA_FILE' 'steam/narwhalcorp/vehicles.meta'
-data_file 'VEHICLE_METADATA_FILE' 'steam/postop/vehicles.meta'
-data_file 'VEHICLE_METADATA_FILE' 'steam/sal/vehicles.meta'
+data_file 'VEHICLE_METADATA_FILE' 'stream/cabs/vehicles.meta'
+data_file 'VEHICLE_METADATA_FILE' 'stream/collinsco/vehicles.meta'
+data_file 'VEHICLE_METADATA_FILE' 'stream/frllc/vehicles.meta'
+data_file 'VEHICLE_METADATA_FILE' 'stream/narwhalcorp/vehicles.meta'
+data_file 'VEHICLE_METADATA_FILE' 'stream/postop/vehicles.meta'
+data_file 'VEHICLE_METADATA_FILE' 'stream/sal/vehicles.meta'
 
 data_file 'VEHICLE_VARIATION_FILE' 'carvariations.meta'
 
