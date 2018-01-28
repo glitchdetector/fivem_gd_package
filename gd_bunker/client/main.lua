@@ -8,22 +8,22 @@ local vehicleBlock = false
 
 local bunkerTeleportPoints = {
     {
-        name = "Zancudo", 
+        name = "Zancudo",
         from = {x = -2051.314697, y = 3237.110596, z = 30.501234},
         to = {x = 902.784058, y = -3182.513916, z = -98.054276}
     },
     {
-        name = "Paleto Bay", 
+        name = "Paleto Bay",
         from = {x = -83.324051, y = 6239.627441, z = 30.090574},
         to = {x = 921.602051, y = -3194.250977, z = -99.262421},
     },
     {
-        name = "Union Depository", 
+        name = "Union Depository",
         from = {x = 10.445343, y = -671.406250, z = 32.449543},
         to = {x = 857.028198, y = -3249.832764, z = -99.340828},
     },
     {
-        name = "Sandy Shores", 
+        name = "Sandy Shores",
         from = {x = 492.929291, y = 3014.827881, z = 40.017887},
         to = {x = 893.823608, y = -3245.822266, z = -99.261101},
     }
@@ -48,10 +48,10 @@ end
 function isInMarker(data)
     local x = data.x
     local y = data.y
-    local z = data.z 
+    local z = data.z
     local p = GetEntityCoords(GetPlayerPed(-1))
     local zDist = math.abs(z - p.z)
-    return (GetDistanceBetweenCoords(x, y, z, p.x, p.y, p.z) < 3 and zDist < 2) 
+    return (GetDistanceBetweenCoords(x, y, z, p.x, p.y, p.z) < 3 and zDist < 2)
 end
 
 function isEPressed()
@@ -65,19 +65,19 @@ function promptTeleport(data, name, entry)
     else
         drawText(string.format(exitBunkerText, name))
     end
-    
+
     if isEPressed() then
         teleportBlock = true
         SetTimeout(2000, function()
-            teleportBlock = false    
+            teleportBlock = false
         end)
-        SetEntityCoords(GetPlayerPed(-1), data.x, data.y, data.z + 0.5, 0, 0, 0, 0) 
+        SetEntityCoords(GetPlayerPed(-1), data.x, data.y, data.z + 0.5, 0, 0, 0, 0)
     end
 end
 
 function promptSpawn(data, vehicle)
     if vehicleBlock then return end
-    drawText(string.format(spawnVehicleText, data.name))    
+    drawText(string.format(spawnVehicleText, data.name))
     if isEPressed() then
         vehicleBlock = true
         RequestModel(GetHashKey(vehicle))
@@ -85,14 +85,14 @@ function promptSpawn(data, vehicle)
         local veh = CreateVehicle(GetHashKey(vehicle), data.x, data.y, data.z, 0.0, true, 0)
         SetPedIntoVehicle(GetPlayerPed(-1), veh, -1)
         SetTimeout(2 * 60 * 1000, function()
-            vehicleBlock = false    
+            vehicleBlock = false
             if DoesEntityExist(veh) then DeleteEntity(veh) end
         end)
     end
 end
 
 function EnableInteriorProp(interior, prop)
-    return Citizen.InvokeNative(0x55E86AF2712B36A1, interior, prop) 
+    return Citizen.InvokeNative(0x55E86AF2712B36A1, interior, prop)
 end
 
 function drawText(text)
@@ -119,7 +119,7 @@ end
 
 Citizen.CreateThread(
     function()
-        
+
 		PopulateVehicleIndex()
 
         -- Bunkers - Exteriors
@@ -133,11 +133,21 @@ Citizen.CreateThread(
         RequestIpl("gr_grdlc_interior_placement")
         RequestIpl("gr_grdlc_interior_placement_interior_0_grdlc_int_01_milo_")
         RequestIpl("gr_grdlc_interior_placement_interior_1_grdlc_int_02_milo_")
-        
+
+        RequestIpl("imp_impexp_interior_placement")
+        RequestIpl("imp_impexp_interior_01")
+        RequestIpl("imp_impexp_interior_02")
+        RequestIpl("imp_impexp_intwaremed")
+        RequestIpl("imp_impexp_mod_int_01")
+        RequestIpl("imp_impexp_interior_placement_interior_0_impexp_int_01_milo_")
+        RequestIpl("imp_impexp_interior_placement_interior_1_impexp_intwaremed_milo_")
+        RequestIpl("imp_impexp_interior_placement_interior_2_impexp_mod_int_01_milo_")
+        RequestIpl("imp_impexp_interior_placement_interior_3_impexp_int_02_milo_")
+
         RequestIpl("sm_smugdlc_interior_placement")
         RequestIpl("sm_smugdlc_interior_placement_interior_0_smugdlc_int_01_milo_")
         RequestIpl("sm_smugdlc_int_01")
-        
+
         RequestIpl("gr_grdlc_yatch_placement")
         RequestIpl("gr_heist_yatch2")
         RequestIpl("gr_heist_yatch2_bar")
@@ -145,9 +155,10 @@ Citizen.CreateThread(
         RequestIpl("gr_heist_yatch2_bridge")
         RequestIpl("gr_heist_yatch2_enginrm")
         RequestIpl("gra_heist_yatch2_lounge")
-        
-        local interior = GetInteriorAtCoords(-1266.80200000,-3014.83700000,-50.00000000)
-        interior = 81897539
+
+        local pos = GetEntityCoords(GetPlayerPed(-1))
+        local interior = GetInteriorAtCoords(pos.x, pos.y, pos.z)
+        --interior = 81897539
         Citizen.InvokeNative(0x2CA429C029CCF247, interior)
         Citizen.Trace("ID:" .. interior)
         Citizen.Trace("Ready:" .. tostring(IsInteriorReady(interior)))
@@ -155,8 +166,8 @@ Citizen.CreateThread(
         Citizen.Trace("Valid:" .. tostring(IsValidInterior(interior)))
         local pos = GetOffsetFromInteriorInWorldCoords(interior, 0.0, 0.0, 0.0)
         Citizen.Trace("Pos: " .. pos.x .. ", " .. pos.y .. ", " .. pos.y .. " ")
-        
-        
+
+
         Citizen.Trace("yatch")
 
         EnableInteriorProp(258561,"standard_bunker_set")
@@ -166,8 +177,13 @@ Citizen.CreateThread(
         EnableInteriorProp(258561,"security_upgrade")
         EnableInteriorProp(258561,"gun_range_lights")
         EnableInteriorProp(258561,"gun_locker_upgrade")
-        RefreshInterior(258561)  
-        
+        RefreshInterior(258561)
+
+        EnableInteriorProp(252673,"car_floor_hatch")
+        DisableInteriorProp(252673,"door_blocker")
+        EnableInteriorProp(252673,"branded_style_set")
+        RefreshInterior(252673)
+
         --[[local i = 0
         local j = 0
         local n = 0
@@ -188,13 +204,13 @@ Citizen.CreateThread(
                     promptTeleport(v.to, v.name, 1)
                 end
                 if isInMarker(v.to) then
-                    promptTeleport(v.from, v.name, 0)                    
+                    promptTeleport(v.from, v.name, 0)
                 end
             end
             for k,v in next, bunkerVehicleSpawners do
                 drawMarker(v)
                 if isInMarker(v) then
-                    promptSpawn(v, v.vehicle)                  
+                    promptSpawn(v, v.vehicle)
                 end
             end
         end
