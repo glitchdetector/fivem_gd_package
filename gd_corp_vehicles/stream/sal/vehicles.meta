@@ -101,8 +101,8 @@
             <modelName>sal_packer</modelName>
             <txdName>sal_packer</txdName>
             <handlingId>PACKERSEMI</handlingId>
-            <gameName>PACKER</gameName>
-            <vehicleMakeName>MTL</vehicleMakeName>
+            <gameName>SAL_PACKER</gameName>
+            <vehicleMakeName>CAPTAINCORP</vehicleMakeName>
             <expressionDictName>null</expressionDictName>
             <expressionName>null</expressionName>
             <animConvRoofDictName>null</animConvRoofDictName>
