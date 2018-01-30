@@ -15,7 +15,7 @@ Citizen.CreateThread(function()
 
 	-- Narwhalcorp
 	AddTextEntry("0x65788180", "Narwhal Corp.")
-	AddTextEntry("0x6A2BF624", "Custom Cab")
+	AddTextEntry("0x98BD545A", "Custom Packer")
 
 	-- SAL
 	AddTextEntry("0x234E818C", "San Andreas Logistics")
