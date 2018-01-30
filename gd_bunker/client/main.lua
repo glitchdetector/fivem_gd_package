@@ -180,7 +180,6 @@ Citizen.CreateThread(
         RefreshInterior(258561)
 
         EnableInteriorProp(252673,"car_floor_hatch")
-        DisableInteriorProp(252673,"door_blocker")
         EnableInteriorProp(252673,"branded_style_set")
         RefreshInterior(252673)
 
