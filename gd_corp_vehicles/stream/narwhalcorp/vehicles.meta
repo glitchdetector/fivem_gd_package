@@ -157,11 +157,11 @@
       <steerWheelMult value="1.000000" />
       <HDTextureDist value="5.000000" />
       <lodDistances content="float_array">
-        500.000000	
-        500.000000	
-        500.000000	
-        500.000000	
-        500.000000	
+        500.000000
+        500.000000
+        500.000000
+        500.000000
+        500.000000
         500.000000
       </lodDistances>
       <minSeatHeight value="0.968" />
@@ -190,6 +190,7 @@
         <Item>trailerlogs</Item>
         <Item>tr2</Item>
         <Item>trflat</Item>
+        <Item>narwhalcorp_trailers2</Item>
       </trailers>
       <additionalTrailers>
         <Item>armytanker</Item>
