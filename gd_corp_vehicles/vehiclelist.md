@@ -22,6 +22,10 @@ frllc_trailers2 -- First Responders Trailer
 
 captaincorp_trailers2 -- SAL Trailer
 
+sal_packer -- SA logistics Packer
+
+sal_phantom -- SA Logistics Phantom
+
 **NARWHALCORP**
 
 narwhalcorp_cab -- Narwhalcorp Cab
