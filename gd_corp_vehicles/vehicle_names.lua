@@ -10,8 +10,9 @@ Citizen.CreateThread(function()
 	AddTextEntry("0xA06D2F5A", "First Response LLC")
 	AddTextEntry("0x0455C4C8", "First Responders LLC")
 	AddTextEntry("0xC8ECA562", "Operations Cab")
-	AddTextEntry("0x05DA6F04", "Frllc_trailers4")
-	
+	AddTextEntry("0xCFE7031E","frllc_trailers5")
+	AddTextEntry("0x05DA6F04", "frllc_trailers4")
+
 	-- General
 	AddTextEntry("0x51DCD300", "Transport Tycoon")
 
