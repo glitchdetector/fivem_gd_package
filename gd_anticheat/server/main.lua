@@ -1,4 +1,4 @@
-local webhook = "https://discordapp.com/api/webhooks/406982346592616468/pTBfwACXo1Go4r5hSvWMunypJbWLbA_i-W25B11AZR4yOEQTD3A4WH9vM6jXAb13upBd"
+local webhook = "https://discordapp.com/api/webhooks/409134895911403540/XQlV2y5PsPBI_YR7Eqmlw1pjhPSa5SRu2X8lC5-fqBIzq0aakY3UR09crRLoag_fexhH"
 
 local Proxy = module("vrp", "lib/Proxy")
 
@@ -18,6 +18,10 @@ function sendWebhookMessage(webhook,message)
 		PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({content = message}), { ['Content-Type'] = 'application/json' })
 	end
 end
+
+AddEventHandler("vRP:playerSpawn", function(user_id, source, first_spawn)
+    TriggerClientEvent("gd_anticheat:enable", source, true)
+end)
 
 
 function reportInfraction(source, infraction, total)
