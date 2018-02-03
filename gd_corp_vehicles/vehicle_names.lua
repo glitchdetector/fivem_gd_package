@@ -1,4 +1,5 @@
 Citizen.CreateThread(function()
+	-- AddTextEntry("","")
 	-- Collinsco
 	AddTextEntry("0x9E5121DF", "Petrochem Tanker")
 	AddTextEntry("0x7D4FBA2F", "Collins' Petrochem Corp.")
@@ -9,6 +10,8 @@ Citizen.CreateThread(function()
 	AddTextEntry("0xA06D2F5A", "First Response LLC")
 	AddTextEntry("0x0455C4C8", "First Responders LLC")
 	AddTextEntry("0xC8ECA562", "Operations Cab")
+	AddTextEntry("0xCFE7031E","frllc_trailers5")
+	AddTextEntry("0x05DA6F04", "frllc_trailers4")
 
 	-- General
 	AddTextEntry("0x51DCD300", "Transport Tycoon")

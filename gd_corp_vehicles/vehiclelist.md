@@ -18,6 +18,8 @@ frllc_trailers3 -- First Responders Trailer Tier 2
 
 frllc_trailers2 -- First Responders Trailer
 
+frllc_trailers4 -- First Responders Trailer
+
 **SAL**
 
 captaincorp_trailers2 -- SAL Trailer
