@@ -80,6 +80,7 @@ Citizen.CreateThread(function()
     while true do
         Wait(10000)
         for user_id,blips in pairs(client_blips) do
+            local source = vRP.getUserSource(user_id)
             for k,v in pairs(blips) do
                 if vRP.hasPermissions(user_id, v[7] or {}) then
                     vRPclient.addBlip(source,{v[1],v[2],v[3],v[4],v[5],v[6]})

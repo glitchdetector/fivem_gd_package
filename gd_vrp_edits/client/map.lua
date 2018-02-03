@@ -202,3 +202,4 @@ end
 function tvRP.closeClosestDoor(doordef)
     tvRP.setStateOfClosestDoor(doordef, true, 0)
 end
+ 
