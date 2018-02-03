@@ -450,8 +450,7 @@ RegisterCommand("roadtrain", function(source, args, raw)
     end
 end, false)
 
-local propify_data = {}
-RegisterCommand("propify", function(source, args, raw)
+RegisterCommand("aif", function(source, args, raw)
     local model = (args[1] or "")
     local xo = (args[2] or 0.0) + 0.0
     local yo = (args[3] or 0.0) + 0.0
@@ -468,6 +467,24 @@ RegisterCommand("propify", function(source, args, raw)
     propify_data[veh] = obj
 end, false)
 
+local propify_data = {}
+RegisterCommand("propify", function(source, args, raw)
+    local model = (args[1] or "")
+    local xo = (args[2] or 0.0) + 0.0
+    local yo = (args[3] or 0.0) + 0.0
+    local zo = (args[4] or 0.0) + 0.0
+    local xr = (args[5] or 0.0) + 0.0
+    local yr = (args[6] or 0.0) + 0.0
+    local zr = (args[7] or 0.0) + 0.0
+    local ped = GetPlayerPed(-1)
+    local veh = GetVehiclePedIsIn(ped, false)
+    requestModel(model)
+    local obj = CreateObject(model, 0.0, 0.0, 0.0, true, 0, true)
+    SetEntityVisible(veh, false, 2)
+    AttachEntityToEntity(obj, veh, 0, xo, yo, zo, xr, yr, zr, 0, false, true, false, 0, true)
+    propify_data[veh] = {obj}
+end, false)
+
 CreateThread(function()
     while true do
         Wait(5)
@@ -475,6 +492,28 @@ CreateThread(function()
             if not DoesEntityExist(k) then
                 DeleteEntity(v)
                 propify_data[k] = nil
+            end
+        end
+    end
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+
+        local ped = GetPlayerPed(-1)
+        local veh = GetVehiclePedIsIn(ped, true)
+
+        if DoesEntityExist(ped) and IsPedInAnyVehicle(ped, false) and IsControlPressed(2, 75) and not IsEntityDead(ped) and not IsPauseMenuActive() then
+            local engineWasRunning = GetIsVehicleEngineRunning(veh)
+            for i=1,10 do
+                Citizen.Wait(200)
+                if DoesEntityExist(ped) and not IsPedInAnyVehicle(ped, false) and not IsEntityDead(ped) and not IsPauseMenuActive() then
+                    if (engineWasRunning) then
+                        SetVehicleEngineOn(veh, true, true, true)
+                    end
+                end
+                    -- body...
             end
         end
     end
