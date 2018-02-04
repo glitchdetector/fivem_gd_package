@@ -1,6 +1,6 @@
 local infractions = {}
 
-local ENABLED = true
+local ENABLED = false
 print("Is she enabled? " .. (ENABLED and "Yes") or "No")
 
 local blacklist = {
