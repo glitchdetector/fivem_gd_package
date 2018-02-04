@@ -33,7 +33,22 @@ function reportInfraction(source, infraction, total)
     local flags = ""
     local dataString = ""
     for k,v in next, data do
-        dataString = dataString .. (" `%s = %s`"):format(tostring(k), tostring(v))
+        local p = ""
+        if (type(v) == 'table') then
+            p = "{"
+            local _d = false
+            for _k,_v in next, v do
+                _d = true
+                p = p .. "\"" .. tostring(_v) .. "\","
+            end
+            if _d then
+                p = p:sub(1,-2)
+            end
+            p = p .. "}"
+        else
+            p = tostring(v)
+        end
+        dataString = dataString .. (" `%s = %s`"):format(tostring(k), tostring(p))
     end
     if vRP.hasGroup({user_id, "admin"}) or
     vRP.hasPermission({user_id, "player.kick"}) then

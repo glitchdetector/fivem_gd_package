@@ -1,10 +1,13 @@
 local infractions = {}
 
-local enabled = false
+local ENABLED = true
+print("Is she enabled? " .. (ENABLED and "Yes") or "No")
 
 local blacklist = {
     vehicles = {
         "RHINO",
+        "HYDRA",
+        "LAZER",
     },
     weapons = {
         "GADGET_NIGHTVISION",
@@ -116,9 +119,9 @@ local config = {
     tp_distance = 200,
     noclip_distance = 25,
     infractionNames = {
-        ["noclip"] = "Noclip",
-        ["health"] = "Health Modifier",
-        ["weapons"] = "Weapons",
+        ["noclip"] = "Noclip / Still Flight",
+        ["health"] = "Health Modifier / Budget God Mode",
+        ["weapons"] = "Weapon Spawning",
         ["god"] = "God Mode / Invincibility",
         ["invisible"] = "Invisibility",
         ["vehicle"] = "Blacklisted Vehicle",
@@ -173,9 +176,24 @@ function makeInfraction(_type, _data)
     TriggerServerEvent("gd_anticheat:infraction", infraction, #infractions)
     local dataString = "`num = " .. #infractions .. "`"
     for k,v in next, _data do
-        dataString = dataString .. (" `%s = %s`"):format(tostring(k), tostring(v))
+        local p = ""
+        if (type(v) == 'table') then
+            p = "{"
+            local _d = false
+            for _k,_v in next, v do
+                _d = true
+                p = p .. "\"" .. tostring(_v) .. "\","
+            end
+            if _d then
+                p = p:sub(1,-2)
+            end
+            p = p .. "}"
+        else
+            p = tostring(v)
+        end
+        dataString = dataString .. (" `%s = %s`"):format(tostring(k), tostring(p))
     end
-    TriggerEvent("gd_utils:popup", "~r~Anti-Cheat", "~y~" .. infraction.name .. "\n~w~" .. dataString, 1)
+    --TriggerEvent("gd_utils:popup", "~r~Anti-Cheat", "~y~" .. infraction.name .. "\n~w~" .. dataString, 1)
 end
 
 Citizen.CreateThread(function()
@@ -196,12 +214,16 @@ Citizen.CreateThread(function()
             end
 
             -- Check for illegal weapons
+            local weapons = {}
             for _,weapon in next, blacklist.weapons do
     			if HasPedGotWeapon(current_tick.ped, GetHashKey(weapon), false) then
-    				RemoveAllPedWeapons(current_tick.ped, false)
-                    makeInfraction("weapons", {weapon = weapon})
+                    table.insert(weapons, weapon)
     			end
     		end
+            if #weapons > 0 then
+                RemoveAllPedWeapons(current_tick.ped, false)
+                makeInfraction("weapons", {weapon = weapons})
+            end
 
             -- Check for illegal vehicles
             if current_tick.driving then
@@ -217,7 +239,7 @@ Citizen.CreateThread(function()
 
 
             -- Check for Invincibility
-            -- if current_tick.god and not current_tick.ragdoll and not previous_tick.ragdoll and current_tick.health > 75.0 then
+            -- if current_tick.god and not current_tick.ragdoll and not previous_tick.ragdoll and current_tick.health > 120.0 then
             --     SetPlayerInvincible(current_tick.ply, false)
             --     makeInfraction("god", {godmode = true, ragdolled = current_tick.ragdoll})
             -- end
@@ -250,7 +272,7 @@ Citizen.CreateThread(function()
             local curWait = math.random(20,350)
             Citizen.Wait(curWait)
 
-            if PlayerPedId() == curPed and GetEntityHealth(curPed) == curHealth and GetEntityHealth(curPed) > 75.0 and GetEntityHealth(curPed) ~= 0 and not IsPedRagdoll(curPed) then
+            if PlayerPedId() == curPed and GetEntityHealth(curPed) == curHealth and GetEntityHealth(curPed) > 120.0 and GetEntityHealth(curPed) ~= 0 and not IsPedRagdoll(curPed) then
                 makeInfraction("health", {health = GetEntityHealth(curPed)})
             elseif GetEntityHealth(curPed) == curHealth-2 then
                 SetEntityHealth(curPed, GetEntityHealth(curPed)+2)
